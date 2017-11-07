@@ -3,20 +3,23 @@ package springmvc.model;
 import java.sql.Date;
 
 public class User {
-	private int id;
+	private Integer id;
 	private String username;
 	private String password;
 	private String email;
 	private Date createtime;
-	private int admin;
+	private Integer admin;
 	
-	public int getId() {
+	public void setId(Integer id) {
+		this.id=id;
+	}
+	public Integer getId() {
 		return id;
 	}
-	public void setAdmin(int admin) {
+	public void setAdmin(Integer admin) {
 		this.admin = admin;
 	}
-	public int getAdmin() {
+	public Integer getAdmin() {
 		return admin;
 	}
 	public void setUsername(String username) {
@@ -37,13 +40,14 @@ public class User {
 	public String getpassword() {
 		return password;
 	}
+	
 	public Date getCreatetime() {
 		return createtime;
 	}
 	@Override
 	public String toString() {
-		return "user [id="+id+",username="+username+
-				",password="+password+",email="+email+
-				",createtime="+createtime+"]";
+		return "{user: [id="+id+",username="+username+
+				",password="+password+",email="+email+",admin="+admin+
+				",createtime="+createtime+"]}";
 	}
 }

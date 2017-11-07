@@ -17,11 +17,11 @@
 		    <tr><td ">
 		    	<table>
 		    		<tr>
-		    			<td ">邮箱：<input type="text" name="email" id="email" size="20"/></td><br/>
-		    			<td ">是否管理员：<input type="text" name="admin" id="admin" size="20"/></td><br/>
+		    			<td >邮箱：<input type="text" name="email" id="email" size="20"/></td><br/>
+		    			<td >是否管理员：<input type="text" name="admin" id="admin" size="20"/></td><br/>
 	
-		    			<td ">登录名：<input name="username" id="username" size="20" /></td><br/>
-		    			<td ">密&nbsp;码：<input name="password" id="password" size="20" /></td>
+		    			<td >登录名：<input name="username" id="username" size="20" /></td><br/>
+		    			<td >密&nbsp;码：<input name="password" id="password" size="20" /></td>
 		    		</tr>
 		    		
 		    	</table>

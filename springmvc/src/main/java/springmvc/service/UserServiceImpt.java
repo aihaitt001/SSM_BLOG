@@ -12,7 +12,7 @@ import springmvc.model.User;
 public class UserServiceImpt implements UserService{
 	@Autowired
 	UsersMapper usersmapper ;
-	public void Add(User user) {
+	public void add(User user) {
 		// TODO Auto-generated method stub
 		usersmapper.add(user);
 		
@@ -23,19 +23,24 @@ public class UserServiceImpt implements UserService{
 		return usersmapper.list();
 	}
 
-	public User getByUsername(String username) {
+	public User getById(Integer id) {
 		// TODO Auto-generated method stub
-		return usersmapper.getByUsername(username);
+		return usersmapper.getById(id);
 	}
 
-	public void Delete(String username) {
+	public void delete(Integer id) {
 		// TODO Auto-generated method stub
-		usersmapper.delete(username);
+		usersmapper.delete(id);
 	}
 
-	public void Update(int id, String username) {
+	public void update(User user) {
 		// TODO Auto-generated method stub
-		usersmapper.update(id, username);
+		usersmapper.update(user);
+	}
+
+	public String checkUsername(String username) {
+		// TODO Auto-generated method stub
+		return usersmapper.checkUsername(username);
 	}
 	
 	

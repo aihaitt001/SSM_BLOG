@@ -23,7 +23,7 @@ public class UsersServiceTest {
 	}
 	@Test
 	public void Delete() {
-		service.Delete("董经博");
+		service.delete("董经博");
 	}
 	@Test
 	public void Add() {
@@ -33,14 +33,19 @@ public class UsersServiceTest {
 		user.setEmail("106129@qq.com");
 		user.setPassword("ovo");
 		user.setUsername("董静波");
-		service.Add(user);
+		service.add(user);
 		
 	}
 	@Test
 	public void Update() {
-		int id = service.getByUsername("董静波").getId();
-		System.out.println(id);
-		service.Update(id, "董经博");
+		
+		User user = new User();
+		
+		user.setUsername("aab");
+		user.setAdmin(1);
+		user.setEmail("aab@qq.com");
+		user.setPassword("aab");
+		service.update(user);
 	}
 	@Test
 	public void getByUsername() {

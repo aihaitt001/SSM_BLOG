@@ -7,15 +7,20 @@
 		insert into users(id,username,password,email,create_time,admin) values
 		(#{id},#{username},#{password},#{email},#{createtime},#{admin})
 	</insert>
-	<select id="getByUsername" parameterType="String" resultType="User">
-		select * from users where username=#{username}
+	<select id="checkUsername" parameterType="String" resultType="String">
+	    select password from users where username=#{username}
+	</select>
+	
+	<select id="getById" parameterType="int" resultType="User">
+		select * from users where id=#{id}
 
 	</select>
-	<delete id="delete" parameterType="String">
-		delete from users where username = #{username}
+	<delete id="delete" parameterType="Integer">
+		delete from users where id = #{id}
 	</delete>
-	<update id="update">
-		update users set username=#{username} where id=#{id}
+	<update id="update" >
+		update users set username=#{username},password=#{password},
+		email=#{email},admin=#{admin} where id=#{id}
 	</update>
 	<select id="list" resultType="User">
 

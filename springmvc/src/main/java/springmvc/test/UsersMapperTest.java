@@ -57,8 +57,12 @@ public class UsersMapperTest {
 
 	@Test
 	public void testUpdate() {
-		
-		UsersMapper.update(1,"董经博");
+		User user = new User();
+		user.setUsername("aab");
+		user.setAdmin(1);
+		user.setEmail("aab@qq.com");
+		user.setPassword("aab");
+		UsersMapper.update(user);
 	}
 
 }

@@ -5,10 +5,11 @@ import java.util.List;
 import springmvc.model.User;
 
 public interface UserService {
+	String checkUsername(String username);
 	List<User> list();
-	void Add(User user);	
-	User getByUsername(String username);
-	void Delete(String username);
-	void Update(int id,String username);
+	void add(User user);	
+	User getById(Integer id);
+	void delete(Integer id);
+	void update(User user);
 	
 }
