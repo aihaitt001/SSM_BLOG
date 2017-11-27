@@ -10,6 +10,9 @@
 	<select id="checkUsername" parameterType="String" resultType="String">
 	    select password from users where username=#{username}
 	</select>
+	<select id="checkEmail" parameterType="String" resultType="String">
+	    select username from users where email=#{email}
+	</select>
 	
 	<select id="getById" parameterType="int" resultType="User">
 		select * from users where id=#{id}

@@ -9,13 +9,14 @@ import springmvc.mapper.UsersMapper;
 import springmvc.model.User;
 
 @Service
-public class UserServiceImpt implements UserService{
+public class UserServiceImpt implements UserService {
 	@Autowired
-	UsersMapper usersmapper ;
+	UsersMapper usersmapper;
+
 	public void add(User user) {
 		// TODO Auto-generated method stub
 		usersmapper.add(user);
-		
+
 	}
 
 	public List<User> list() {
@@ -42,6 +43,11 @@ public class UserServiceImpt implements UserService{
 		// TODO Auto-generated method stub
 		return usersmapper.checkUsername(username);
 	}
-	
-	
+
+	public String checkEmail(String email) {
+		// TODO Auto-generated method stub
+		return usersmapper.checkEmail(email);
+
+	}
+
 }

@@ -6,10 +6,17 @@ import springmvc.model.User;
 
 public interface UserService {
 	String checkUsername(String username);
+
+	String checkEmail(String email);
+
 	List<User> list();
-	void add(User user);	
+
+	void add(User user);
+
 	User getById(Integer id);
+
 	void delete(Integer id);
+
 	void update(User user);
-	
+
 }

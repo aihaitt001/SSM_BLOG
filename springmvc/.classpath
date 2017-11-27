@@ -28,10 +28,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/apache-tomcat-8.5.23/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="D:/开发资源/mysql-connector-java-5.1.41-bin.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="D:/开发资源/jsp/jakarta-taglibs-standard-1.1.2/lib/jstl.jar"/>
-	<classpathentry kind="lib" path="D:/开发资源/jsp/jakarta-taglibs-standard-1.1.2/lib/standard.jar"/>
+	<classpathentry kind="lib" path="D:/apache-tomcat-8.5.23/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

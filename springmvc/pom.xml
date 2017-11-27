@@ -8,6 +8,52 @@
   <name>springmvc Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
+	 <!--thymeleaf-->
+	    <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
+	    <dependency>
+	        <groupId>org.thymeleaf</groupId>
+	        <artifactId>thymeleaf</artifactId>
+	        <version>3.0.6.RELEASE</version>
+	    </dependency>
+	    <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring4 -->
+	    <dependency>
+	        <groupId>org.thymeleaf</groupId>
+	        <artifactId>thymeleaf-spring4</artifactId>
+	        <version>3.0.6.RELEASE</version>
+	    </dependency>
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>jstl</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		 
+ 		<dependency>
+   	 		<groupId>taglibs</groupId>
+  	  		<artifactId>standard</artifactId>
+    		<version>1.1.2</version>
+			</dependency>
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.6</version>
+		</dependency>
+  
+		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		    <version>2.9.0</version>
+		</dependency>
+		  
+          <dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-api</artifactId>
+		    <version>2.9.1</version>
+		  </dependency>
+		  <dependency>
+		    <groupId>org.apache.logging.log4j</groupId>
+		    <artifactId>log4j-core</artifactId>
+		    <version>2.9.1</version>
+		  </dependency>
 		  <!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
 		<dependency>
 		    <groupId>org.codehaus.jackson</groupId>

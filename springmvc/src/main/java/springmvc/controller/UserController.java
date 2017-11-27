@@ -1,8 +1,8 @@
 package springmvc.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,31 +18,6 @@ import springmvc.service.UserService;
 public class UserController {
 	@Autowired
 	UserService userservice;
-
-	@RequestMapping("/login")
-	public ModelAndView login(@ModelAttribute User user, ModelAndView mav, HttpSession session) {
-
-		System.out.println(user);
-		String username = user.getUsername();
-		session.setAttribute("username", username);
-		String password = userservice.checkUsername(username);
-		System.out.println(password);
-		if (password == null) {
-			System.out.println("用户名不正确");
-			mav.setViewName("redirect:/error");
-		} else {
-			if (password.equals(user.getpassword())) {
-				System.out.println("登陆成功");
-				mav.setViewName("redirect:/list");
-			} else {
-				System.out.println("密码不正确");
-				mav.setViewName("redirect:/error");
-			}
-		}
-
-		return mav;
-
-	}
 
 	// public void login(@RequestBody User user, HttpServletResponse response)
 	// throws JsonGenerationException, JsonMappingException, IOException {
@@ -86,14 +61,15 @@ public class UserController {
 
 	}
 
-	@RequestMapping("/list")
-	public ModelAndView list() {
+	@RequestMapping("/listUsers")
+	public ModelAndView listUsers() {
+		System.out.println("listUsers");
 		ModelAndView mav = new ModelAndView();
 		List<User> users = userservice.list();
 		// 放入转发参数
 		mav.addObject("users", users);
 
-		mav.setViewName("list");
+		mav.setViewName("listUsers");
 		return mav;
 	}
 
@@ -101,15 +77,23 @@ public class UserController {
 	 * 利用form提交请求。 flag 判定是否添加。1：进入 新增页面。2：新增操作，进入列表页面。
 	 * 
 	 **/
-	@RequestMapping("/add")
-	public ModelAndView add(String flag, @ModelAttribute User user, ModelAndView mav) {
+	@RequestMapping("/addUsers")
+	public ModelAndView addUsers(String flag, @ModelAttribute User user, ModelAndView mav) {
 		if (flag != null) {
 			if (flag.equals("1")) {
-				mav.setViewName("add");
+				mav.setViewName("addUsers");
 			} else {
 				System.out.println(user);
+				Date date = new Date();
+
+				Timestamp createtime = new Timestamp(date.getTime());
+				System.out.println(createtime);
+				user.setCreatetime(createtime);
+
+				System.out.println(user);
 				userservice.add(user);
-				mav.setViewName("redirect:list");
+
+				mav.setViewName("redirect:listUsers");
 			}
 		} else {
 			System.out.println("flag =null");
@@ -123,7 +107,7 @@ public class UserController {
 		for (String id : idlist) {
 			userservice.delete(Integer.valueOf(id));
 		}
-		mv.setViewName("redirect:/list");
+		mv.setViewName("redirect:/listUsers");
 		return mv;
 	}
 
@@ -141,7 +125,7 @@ public class UserController {
 				// 设置Model数据
 				mv.addObject("user", target);
 				// 返回修改员工页面
-				mv.setViewName("/update");
+				mv.setViewName("/updateUsers");
 			} else if (flag.equals("2")) {
 				// 执行修改操作
 				System.out.println("更新后id：" + user.getId());
@@ -149,11 +133,12 @@ public class UserController {
 				userservice.update(user);
 
 				// 设置客户端跳转到查询请求
-				mv.setViewName("redirect:/list");
+				mv.setViewName("redirect:/listUsers");
 
 			}
 		} else {
 			System.out.println("flag =null");
+			mv.setViewName("/updateUsers");
 		}
 
 		return mv;
