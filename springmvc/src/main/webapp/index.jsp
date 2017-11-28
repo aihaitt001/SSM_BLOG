@@ -6,16 +6,22 @@
 <body>
 	<h2>Hello World!</h2><br/>
 	
-	<a href="/springmvc/login">登陆</a>
-	<a href="/springmvc/register">注册</a>
-	<a href="/springmvc/listUser">列表</a>
-	<a href="/springmvc/addUser?flag=1">新增</a>
-	<a href="/springmvc/listArtcles">文章</a>
+	<ul>
+	<li><a href="/springmvc/login">登陆</a></li>
+	<li><a href="/springmvc/register">注册</a></li>
+	<li><a href="/springmvc/listUser">列表</a></li>
+	<li><a href="/springmvc/addUser?flag=1">新增</a></li>
+	<li><a href="/springmvc/artcles">文章</a></li>
 	
-	<table >
+	<li><form id="_form" method="post" action="/springmvc/artcles">
+  <input type="hidden" name="flag" value="1" /> 
+  <a onclick="document.getElementById('_form').submit();">写作</a>
+</form></li>
+	</ul>
+	<table>
   	<tr valign="top">
     <td>
-    	 <form action="/springmvc/login" id="loginForm" method="post">
+    	 <form action="/springmvc/login" id="loginForm" method="POST">
     	 	
 		  <table width="100%" border="0" cellpadding="0" cellspacing="10">
 		    <tr>	    		

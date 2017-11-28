@@ -49,14 +49,14 @@ public class UserController {
 	// }
 	@RequestMapping("/error")
 	public ModelAndView error(ModelAndView mav) {
-		mav.setViewName("error");
+		mav.setViewName("error.jsp");
 		return mav;
 
 	}
 
 	@RequestMapping("/success")
 	public ModelAndView success(ModelAndView mav) {
-		mav.setViewName("success");
+		mav.setViewName("success.jsp");
 		return mav;
 
 	}
@@ -69,7 +69,7 @@ public class UserController {
 		// 放入转发参数
 		mav.addObject("users", users);
 
-		mav.setViewName("listUsers");
+		mav.setViewName("listUsers.jsp");
 		return mav;
 	}
 
@@ -77,11 +77,11 @@ public class UserController {
 	 * 利用form提交请求。 flag 判定是否添加。1：进入 新增页面。2：新增操作，进入列表页面。
 	 * 
 	 **/
-	@RequestMapping("/addUsers")
-	public ModelAndView addUsers(String flag, @ModelAttribute User user, ModelAndView mav) {
+	@RequestMapping("/addUser")
+	public ModelAndView addUser(String flag, @ModelAttribute User user, ModelAndView mav) {
 		if (flag != null) {
 			if (flag.equals("1")) {
-				mav.setViewName("addUsers");
+				mav.setViewName("addUser.jsp");
 			} else {
 				System.out.println(user);
 				Date date = new Date();
@@ -125,7 +125,7 @@ public class UserController {
 				// 设置Model数据
 				mv.addObject("user", target);
 				// 返回修改员工页面
-				mv.setViewName("/updateUsers");
+				mv.setViewName("/updateUser.jsp");
 			} else if (flag.equals("2")) {
 				// 执行修改操作
 				System.out.println("更新后id：" + user.getId());
@@ -138,7 +138,7 @@ public class UserController {
 			}
 		} else {
 			System.out.println("flag =null");
-			mv.setViewName("/updateUsers");
+			mv.setViewName("/updateUser.jsp");
 		}
 
 		return mv;

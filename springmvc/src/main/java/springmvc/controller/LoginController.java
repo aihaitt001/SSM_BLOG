@@ -26,7 +26,7 @@ public class LoginController {
 		}
 
 		if (flag.equals("1")) {
-			mav.setViewName("register");
+			mav.setViewName("register.jsp");
 			System.out.println("register  1");
 		} else {
 			System.out.println("register  2");
@@ -59,16 +59,18 @@ public class LoginController {
 
 			System.out.println(user);
 			String username = user.getUsername();
+			User getuser = userservice.checkUsername(username);
+			String password = "";
 
-			String password = userservice.checkUsername(username);
+			if (getuser == null) {
 
-			if (password == null) {
 				System.out.println("用户名不正确");
 				mav.setViewName("redirect:/error");
 			} else {
+				password = getuser.getpassword();
 				if (password.equals(user.getpassword())) {
 					System.out.println("登陆成功");
-					session.setAttribute("user_session", user);
+					session.setAttribute("user_session", getuser);
 					mav.setViewName("redirect:/listUsers");
 				} else {
 					System.out.println("密码不正确");

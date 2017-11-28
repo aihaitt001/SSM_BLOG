@@ -9,7 +9,7 @@
 	<table >
   	<tr valign="top">
     <td>
-    	 <form action="/springmvc/login" id="loginForm" method="post">
+    	 <form action="/springmvc/login" id="loginForm" method="get">
     	 	
 		  <table width="100%" border="0" cellpadding="0" cellspacing="10">
 		    <tr>	    		

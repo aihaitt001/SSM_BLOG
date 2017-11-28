@@ -64,7 +64,7 @@
 			<td >${user.email }</td>
 		    <td >${user.admin}</td>
 		    		
-            <td ><a href="/springmvc/updateUsers?flag=1&id=${user.id }">修改</a></td>
+            <td ><a href="/springmvc/updateUser?flag=1&id=${user.id }">修改</a></td>
 		</tr>
 	</c:forEach>
 </table>

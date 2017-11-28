@@ -7,8 +7,8 @@
 		insert into users(id,username,password,email,create_time,admin) values
 		(#{id},#{username},#{password},#{email},#{createtime},#{admin})
 	</insert>
-	<select id="checkUsername" parameterType="String" resultType="String">
-	    select password from users where username=#{username}
+	<select id="checkUsername" parameterType="String" resultType="User">
+	    select * from users where username=#{username}
 	</select>
 	<select id="checkEmail" parameterType="String" resultType="String">
 	    select username from users where email=#{email}

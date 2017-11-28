@@ -5,7 +5,7 @@ import java.util.List;
 import springmvc.model.User;
 
 public interface UsersMapper {
-	public String checkUsername(String username);
+	public User checkUsername(String username);
 
 	public String checkEmail(String email);
 

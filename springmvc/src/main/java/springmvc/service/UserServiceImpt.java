@@ -39,7 +39,7 @@ public class UserServiceImpt implements UserService {
 		usersmapper.update(user);
 	}
 
-	public String checkUsername(String username) {
+	public User checkUsername(String username) {
 		// TODO Auto-generated method stub
 		return usersmapper.checkUsername(username);
 	}
