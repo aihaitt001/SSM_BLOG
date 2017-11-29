@@ -53,6 +53,7 @@
 		<td>密码</td>
 		<td>email</td>
 		<td>管理员权限</td>
+		<td>注册时间</td>
 		<td>操作</td>
 	</tr>
 	<c:forEach items="${users}" var="user" varStatus="st">
@@ -63,7 +64,7 @@
 			<td>${user.password}</td>
 			<td >${user.email }</td>
 		    <td >${user.admin}</td>
-		    		
+		    <td >${user.createtime}</td>		
             <td ><a href="/springmvc/updateUser?flag=1&id=${user.id }">修改</a></td>
 		</tr>
 	</c:forEach>

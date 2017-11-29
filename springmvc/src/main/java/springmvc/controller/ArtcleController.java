@@ -39,8 +39,9 @@ public class ArtcleController {
 
 		} else {
 			for (Artcle artcle : artcles) {
-				System.out.println(artcle);
+				System.out.println(artcle.getCreateTime());
 			}
+			mav.addObject("artcles", artcles);
 			mav.setViewName("/listArtcles.html");
 		}
 		return mav;

@@ -57,4 +57,10 @@ public class Artcle {
 	public Timestamp getCreateTime() {
 		return createtime;
 	}
+
+	@Override
+	public String toString() {
+		return "{artcle: [artcleId=" + artcleId + ",title=" + title + ",author=" + author + ",tags=" + tags + ",body="
+				+ body + ",createtime=" + createtime + "]}";
+	}
 }

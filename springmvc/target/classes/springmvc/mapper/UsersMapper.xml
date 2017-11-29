@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="springmvc.mapper.UsersMapper">
 	<insert id="add" parameterType="User">
-		insert into users(id,username,password,email,create_time,admin) values
+		insert into users(id,username,password,email,createtime,admin) values
 		(#{id},#{username},#{password},#{email},#{createtime},#{admin})
 	</insert>
 	<select id="checkUsername" parameterType="String" resultType="User">

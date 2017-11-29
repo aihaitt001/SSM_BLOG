@@ -28,18 +28,21 @@ public class LoginedInterceptor implements HandlerInterceptor {
 		boolean islogined = false;
 		String servletPath = request.getServletPath();
 		String method = request.getMethod();
-		for (String s : IGNORE_URI) {
-			if (s.equals("artcles") && method.equals("GET")) {
-				System.out.println("不拦截");
-				islogined = true;
-				break;
-			}
-			if (servletPath.contains(s)) {
-				System.out.println("不拦截");
-				islogined = true;
-				break;
+		if (servletPath.contains("artcles") && method.equals("GET")) {
+			System.out.println("不拦截");
+			islogined = true;
+
+		} else {
+			for (String s : IGNORE_URI) {
+
+				if (servletPath.contains(s)) {
+					System.out.println("不拦截");
+					islogined = true;
+					break;
+				}
 			}
 		}
+
 		if (!islogined) {
 			User user = (User) request.getSession().getAttribute("user_session");
 			if (user == null) {

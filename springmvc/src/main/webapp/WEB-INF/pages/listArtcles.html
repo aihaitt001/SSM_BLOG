@@ -7,5 +7,20 @@
 </head>
 <body>
   <p>hello world<p/>
+  <div id="artclelist">
+        <h1>artcles</h1>
+        <ul id="artcleList">
+          <li th:each="artcle : ${artcles}" 
+              th:id="'artcle_' + ${artcle.artcleId}">
+               <div><p class="artcleTitle" th:text="${artcle.title}" >artcle title</p></div>
+            <div><p class="artcleAuthor" th:text="${artcle.author}">artcle body</p> </div>
+            <div><p class="artcleTags" th:text="${artcle.tags}" >artcle tags</p></div>
+            <div><p class="artcleBody" th:text="${artcle.body}">artcle body</p> </div>
+          <!-- <div><p class="artclecreatetime" th:text="${artcle.createtime}">artcle createtime</p> </div> --> 
+            <!-- <div><p class="artcleCreateTime" th:text="${artcle.createtime=null} ? 
+            ${#dates.format(artcle.createtime,'yyyy/MM/dd')} : 'null'  " >artcle CreateTime</p> </div> -->
+          </li>
+        </ul>
+      </div>
 </body>
 </html>

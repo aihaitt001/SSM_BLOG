@@ -20,7 +20,7 @@
 		update artcles set title=#{title},tags=#{tags},
 		body=#{body},author=#{author},createtime=#{createtime} where artcleId=#{artcleId}
 	</update>
-	<select id="list" resultType="artcle">
+	<select id="list" resultType="Artcle">
 
 		select * from artcles
 	</select>
