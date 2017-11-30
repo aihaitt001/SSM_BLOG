@@ -3,12 +3,11 @@
 		xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>listArtcles</title>
-
-	<script type="text/javascript" src="/springmvc/js/jquery-1.11.0.js"></script>
+<title>Artcle</title>
+<script type="text/javascript" src="/springmvc/js/jquery-1.11.0.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-		var user ;
+		var user;
 		
 		if(user==''||user==null){
 			$("#user").text("游客");
@@ -17,19 +16,17 @@
 		}
 	});
 	</script>
-
 </head>
 <body>
   <p>hello world<p/>
   <p id="user">用户名 </p><br/>
   <p id="username" text="${username}"></p><br/>
-  <div id="artclelist">
-        <h1>artcles</h1>
-        <ul id="artcleList">
-          <li th:each="artcle : ${artcles}" 
-              th:id="'artcle_' + ${artcle.artcleId}">
+  <div id="artcle">
+        <h1>artcle</h1>
+        <ul id="artcle">
+          <li th:id="${artcle.artcleId}">
                <div><p class="artcleTitle" th:text="${artcle.title}" >artcle title</p>
-                    <a th:href="'/springmvc/artcles/'+${artcle.artcleId}">详情</a>
+                   
                </div>
                
             <div><p class="artcleAuthor" th:text="${artcle.author}">artcle body</p> </div>

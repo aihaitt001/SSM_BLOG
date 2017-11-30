@@ -8,3 +8,6 @@
 7. 	1. 新增查看文章列表   
 	2. log出问题无法使用
 	3. listArtcles.html中的createtime无法识别  --11.29
+8.  1. 尝试mockmvc+JUnit 进行控制器的测试。
+    2. 增加点击文章转到文章详情   --11.30
+	

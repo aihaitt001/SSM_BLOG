@@ -65,16 +65,21 @@ public class LoginController {
 			if (getuser == null) {
 
 				System.out.println("用户名不正确");
-				mav.setViewName("redirect:/error");
+				// mav.setViewName("redirect:/error");
+				mav.addObject("message", "用户名不正确");
+				mav.setViewName("/login.jsp");
 			} else {
 				password = getuser.getpassword();
 				if (password.equals(user.getpassword())) {
 					System.out.println("登陆成功");
+					mav.addObject("username", getuser.getUsername());
 					session.setAttribute("user_session", getuser);
-					mav.setViewName("redirect:/listUsers");
+					mav.setViewName("redirect:/artcles");
 				} else {
 					System.out.println("密码不正确");
-					mav.setViewName("redirect:/error");
+					// mav.setViewName("redirect:/error");
+					mav.addObject("message", "密码不正确");
+					mav.setViewName("/login.jsp");
 				}
 			}
 		} else {

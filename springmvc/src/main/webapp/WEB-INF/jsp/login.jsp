@@ -2,31 +2,36 @@
 	pageEncoding="UTF-8" import="java.util.*"%>
 
 <html >
-
+<head>
+	<script type="text/javascript" src="/springmvc/js/jquery-1.11.0.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var user;
+		alert(user);
+		if(user==''||user==null){
+			$("#user").text("游客");
+		}else{
+			$("#user").text(user);
+		}
+	});
+	</script>
+</head>
 <body>
 	<h2>login!</h2><br/>
+	<p id="user">用户名 </p><br/>
 	
-	<table >
-  	<tr valign="top">
-    <td>
-    	 <form action="/springmvc/login" id="loginForm" method="get">
+	
+    	 <form action="/springmvc/login" id="loginForm" method="POST">
     	 	
-		  <table width="100%" border="0" cellpadding="0" cellspacing="10">
-		    <tr>	    		
+		 	    		 <label id="message" type="hidden" text="${message}" >${message}</label>
 		         <input type="hidden" name="flag" value="2">	
-		    	<td >登录名：<input name="username" id="username" size="20" value="${user.username}"/></td>
-		    	<td >密&nbsp;码：<input name="password" id="password" size="20" value="${user.password}"/></td>		    	
-		    </tr>
+		    	登录名：<input name="username" id="username" size="20" value="${user.username}"/>
+		    	密&nbsp;码：<input name="password" id="password" size="20" value="${user.password}"/>		    	
+		        
+		   
 			
-			<tr><td align="left" >
-			    <input id="login" type="submit" value="登录">
-			    </td>
-			</tr>
-			
-		  </table>
+						    <input id="login" type="submit" value="登录">			  				 
 		 </form>
-	</td>
-  </tr>
-</table>
+	
 </body>
 </html>
