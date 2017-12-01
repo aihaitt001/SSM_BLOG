@@ -40,7 +40,7 @@ public class LoginController {
 			System.out.println(user);
 			userservice.add(user);
 			session.setAttribute("user_session", user);
-			mav.setViewName("redirect:listUsers");
+			mav.setViewName("redirect:listArtcles");
 		}
 
 		return mav;
@@ -74,7 +74,15 @@ public class LoginController {
 					System.out.println("登陆成功");
 					mav.addObject("username", getuser.getUsername());
 					session.setAttribute("user_session", getuser);
-					mav.setViewName("redirect:/artcles");
+
+					if (user.getAdmin() == 1) {
+						mav.addObject("admin", "管理员");
+						mav.setViewName("redirect:/listUsers");
+					} else {
+						mav.addObject("admin", "普通用户");
+						mav.setViewName("redirect:/artcles");
+					}
+
 				} else {
 					System.out.println("密码不正确");
 					// mav.setViewName("redirect:/error");
