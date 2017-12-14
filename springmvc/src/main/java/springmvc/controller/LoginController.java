@@ -57,9 +57,9 @@ public class LoginController {
 			mav.setViewName("/login.jsp");
 		} else if (flag.equals("2")) {
 
-			System.out.println(user);
 			String username = user.getUsername();
 			User getuser = userservice.checkUsername(username);
+			System.out.println(getuser);
 			String password = "";
 
 			if (getuser == null) {
@@ -72,14 +72,14 @@ public class LoginController {
 				password = getuser.getpassword();
 				if (password.equals(user.getpassword())) {
 					System.out.println("登陆成功");
-					mav.addObject("username", getuser.getUsername());
+					// mav.addObject("username", getuser.getUsername());
 					session.setAttribute("user_session", getuser);
 
-					if (user.getAdmin() == 1) {
-						mav.addObject("admin", "管理员");
+					if (getuser.getAdmin() == 1) {
+						// mav.addObject("admin", "管理员");
 						mav.setViewName("redirect:/listUsers");
 					} else {
-						mav.addObject("admin", "普通用户");
+						// mav.addObject("admin", "普通用户");
 						mav.setViewName("redirect:/artcles");
 					}
 

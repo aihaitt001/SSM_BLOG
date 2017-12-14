@@ -9,7 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 import springmvc.model.User;
 
 public class LoginedInterceptor implements HandlerInterceptor {
-	private static final String[] IGNORE_URI = { "jpg", "img", "css", "js", "/login", "/404", "/error", "/register" };
+	private static final String[] IGNORE_URI = { "main", "jpg", "img", "css", "js", "index", "login", "404", "error",
+			"/register" };
 
 	public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {

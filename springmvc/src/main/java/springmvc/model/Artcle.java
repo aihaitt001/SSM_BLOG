@@ -50,11 +50,11 @@ public class Artcle {
 		return author;
 	}
 
-	public void setCreateTime(Timestamp createtime) {
+	public void setCreatetime(Timestamp createtime) {
 		this.createtime = createtime;
 	}
 
-	public Timestamp getCreateTime() {
+	public Timestamp getCreatetime() {
 		return createtime;
 	}
 

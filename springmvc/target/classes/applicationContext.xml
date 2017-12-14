@@ -28,6 +28,7 @@
 			<aop:after-throwing pointcut-ref="logined" method="afterThrow"/>
 		</aop:aspect>
 	</aop:config>
+	
 	<context:annotation-config />
 	<context:component-scan base-package="springmvc.service" />
 

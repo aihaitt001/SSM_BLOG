@@ -13,11 +13,11 @@
 
 	  	<!-- 非正常登陆拦截器 -->
    
-   <mvc:interceptors>
+   	<mvc:interceptors>
        
          <bean class="springmvc.interceptor.LoginedInterceptor"/>
        
-  </mvc:interceptors>  
+  	</mvc:interceptors>  
 
 	<context:component-scan base-package="springmvc.controller">
 		<context:include-filter type="annotation"
@@ -31,7 +31,23 @@
 	<!-- 使用默认的Servlet来响应静态文件 -->
     <mvc:default-servlet-handler/>
     
-    
+     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> 
+               
+	    <property name="messageConverters">  
+	        <list>  
+	            <ref bean="jsonHttpMessageConverter" />  
+	        </list>  
+	    </property>  
+	</bean>  
+	  
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">  
+	                                          
+	    <property name="supportedMediaTypes">  
+	        <list>  
+	            <value>application/json;charset=UTF-8</value>  
+	        </list>  
+	    </property>  
+	</bean>  
 	<!-- 视图定解析-->
 	<!--<bean id="viewResolverCommon"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -6,19 +6,16 @@
 	<script type="text/javascript" src="/springmvc/js/jquery-1.11.0.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-		var user;
-		alert(user);
-		if(user==''||user==null){
-			$("#user").text("游客");
-		}else{
-			$("#user").text(user);
-		}
+		
 	});
 	</script>
 </head>
 <body>
 	<h2>login!</h2><br/>
 	<p id="user">用户名 </p><br/>
+	<table>
+	<tr><td>当前用户：【${sessionScope.user_session.username}】</td></tr>
+	</table>
 	
 	
     	 <form action="/springmvc/login" id="loginForm" method="POST">

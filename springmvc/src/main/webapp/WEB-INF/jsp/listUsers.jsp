@@ -44,7 +44,9 @@
 	</script>
 </head>
 <body>
+<table><tr><td>当前用户：【${sessionScope.user_session.username}】</td></tr></table>
 <table align='center' border='1' cellspacing='0'>
+	
     <tr><td><input id="delete" type="button" value="删除"/></td></tr>
 	<tr>
 	    <td>选择</td>
