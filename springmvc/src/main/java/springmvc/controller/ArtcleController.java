@@ -59,7 +59,7 @@ public class ArtcleController {
 				System.out.println(artcle);
 			}
 			mav.addObject("artcles", artcles);
-			mav.setViewName("/listArtcles.html");
+			mav.setViewName("/artcles.html");
 		}
 		return mav;
 	}

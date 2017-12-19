@@ -11,19 +11,22 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
 
-	  	<!-- 非正常登陆拦截器 -->
-   
+
+<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<context:component-scan base-package="springmvc.aop"/>
+ 	
+	  	
+    <context:component-scan base-package="springmvc.controller">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
    	<mvc:interceptors>
        
          <bean class="springmvc.interceptor.LoginedInterceptor"/>
        
   	</mvc:interceptors>  
-
-	<context:component-scan base-package="springmvc.controller">
-		<context:include-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
-	
+  	
 
 	<!-- 设置配置方案  -->
 	<mvc:annotation-driven/>
@@ -49,46 +52,37 @@
 	    </property>  
 	</bean>  
 	<!-- 视图定解析-->
-	<!--<bean id="viewResolverCommon"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
-		<property name="order" value="1"/>
-	</bean>
-	
-	  <bean id="templateResolver"  
-         class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">  
-     <property name="prefix" value="/WEB-INF/pages/" />  
-     <property name="suffix" value=".html" />  
-     <property name="templateMode" value="HTML" />  
-     <property name="cacheable" value="false" />  
-   </bean>   
-   <bean id="viewResolverCommon"
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView" />
-		<property name="prefix" value="/WEB-INF/jsp/" />
-		<property name="suffix" value=".jsp" />
-		<property name="order" value="1"/>
-	</bean>
-      
-    <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
-        <property name="prefix" value="/WEB-INF/pages/"/>
-        <property name="suffix" value=".html"/>
-        <property name="templateMode" value="HTML"/>
-        <property name="cacheable" value="false"/>
-    </bean>
-    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
-        <property name="templateResolver" ref="templateResolver"/>
-    </bean>
-
-    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
-        <property name="templateEngine" ref="templateEngine"/>
-        <property name="order" value="2"/>
-    </bean>   -->
-    
+	<!-- viewname=" html/*  ||  jsp/* "
+			<bean id="viewResolver" class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+			    <property name="templateEngine" ref="templateEngine" />
+			    <property name="characterEncoding" value="UTF-8" />
+			    <property name="viewNames" value="html/*" />
+			    <property name="order" value="2"/>
+			</bean>
+			
+			
+			<bean id="jspResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			    <property name="prefix" value="/WEB-INF/jsps/"/>
+			    <property name="suffix" value=".jsp"/>
+			    <property name="viewNames" value="jsp/*" />
+			    <property name="order" value="1"/>
+			</bean>
+						
+			<bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+			    <property name="templateResolvers">
+			        <set>
+			            <ref bean="templateResolver" />
+			        </set>
+			    </property>
+			</bean>
+			
+			<bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+			    <property name="prefix" value="/WEB-INF/pages/" />
+			    <property name="suffix" value=".html" />
+			    <property name="templateMode" value="HTML" />
+			    
+			</bean>		
+	 -->
     
     <bean id="templateResolver"
           class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">

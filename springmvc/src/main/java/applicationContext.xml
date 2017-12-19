@@ -16,7 +16,8 @@
      http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
      http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 	
-	<bean id="loginLoggerMethod" class="springmvc.log.LoginLoggerMethod"/>
+	<!-- 
+	<bean id="loginLoggerMethod" class="springmvc.aop.LoginLoggerMethod"/>
 		
 	<aop:config>
 		
@@ -29,6 +30,8 @@
 		</aop:aspect>
 	</aop:config>
 	
+	 -->
+	 
 	<context:annotation-config />
 	<context:component-scan base-package="springmvc.service" />
 

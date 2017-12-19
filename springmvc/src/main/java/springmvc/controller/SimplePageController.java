@@ -20,6 +20,18 @@ public class SimplePageController {
 	@Autowired
 	ArtcleService service;
 
+	@RequestMapping(value = "/footer")
+	public ModelAndView footer(ModelAndView mav) {
+		mav.setViewName("footer.html");
+		return mav;
+	}
+
+	@RequestMapping(value = "/nav")
+	public ModelAndView nav(ModelAndView mav) {
+		mav.setViewName("nav.html");
+		return mav;
+	}
+
 	/*
 	 * 列出所有的文章
 	 */

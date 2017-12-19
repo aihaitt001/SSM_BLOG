@@ -4,6 +4,29 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	
+	
+	
+	 <context-param>  
+        <param-name>isLog4jAutoInitializationDisabled</param-name>  
+        <param-value>false</param-value>  
+    </context-param>  
+    
+    <listener>  
+        <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>  
+    </listener>  
+   
+    <filter>  
+        <filter-name>log4jServletFilter</filter-name>  
+        <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>  
+    </filter>  
+    <filter-mapping>  
+        <filter-name>log4jServletFilter</filter-name>  
+        <url-pattern>/*</url-pattern>  
+        <dispatcher>REQUEST</dispatcher>  
+        <dispatcher>FORWARD</dispatcher>  
+        <dispatcher>INCLUDE</dispatcher>  
+        <dispatcher>ERROR</dispatcher>  
+    </filter-mapping>
 	<!-- 
 	<filter>
 		<filter-name>HiddenHttpMethodFilter</filter-name>
@@ -18,6 +41,24 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	 -->
+	<!-- 配置REST风格的过滤器将POST请求转化为PUT、DELETE -->
+	<filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>HttpPutFormContentFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HttpPutFormContentFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HttpPutFormContentFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
     <filter>  
         <filter-name>characterEncodingFilter</filter-name>  
@@ -65,41 +106,6 @@
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-	<!-- jstl本地化配置 -->
-	<!-- <jsp-config>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/fmt</taglib-uri>
-			<taglib-location>/WEB-INF/fmt.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/fmt-rt</taglib-uri>
-			<taglib-location>/WEB-INF/fmt-rt.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
-			<taglib-location>/WEB-INF/c.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/core-rt</taglib-uri>
-			<taglib-location>/WEB-INF/c-rt.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/sql</taglib-uri>
-			<taglib-location>/WEB-INF/sql.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/sql-rt</taglib-uri>
-			<taglib-location>/WEB-INF/sql-rt.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/x</taglib-uri>
-			<taglib-location>/WEB-INF/x.tld</taglib-location>
-		</taglib>
-		<taglib>
-			<taglib-uri>http://java.sun.com/jstl/x-rt</taglib-uri>
-			<taglib-location>/WEB-INF/x-rt.tld</taglib-location>
-		</taglib>
-	</jsp-config>
-	 -->
+	
 
 </web-app>

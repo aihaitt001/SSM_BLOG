@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>addArtcle</title>
+</head>
+<body>
+
+	<form action="/springmvc/artcles" method="post" id="artcleForm" th:object="${artcle}">
+	<input type="hidden" name="flag" value="2">
+	<table>
+		<tr>
+		
+		</tr>
+		<label> title </label>
+		<input type="text" id="title" th:field="*{title}"/></br>
+		<tr>
+		<label> tags </label>
+		<input type="text" id="tags" th:field="*{tags}"/></br>
+		</tr>
+		<tr>
+			<td>
+				<label> body </label>
+				<input type="text" id="body" th:field="*{body}"/></br>
+			</td>
+		 
+		</tr>
+		
+		<tr><td>
+			    <input type="submit" value="添加">&nbsp;&nbsp;
+			    <input type="reset" value="取消 "></td>
+			</tr>
+	
+	
+		</table>
+	</form>
+
+
+	
+
+</body>
+</html>
