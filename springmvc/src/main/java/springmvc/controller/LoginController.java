@@ -48,59 +48,52 @@ public class LoginController {
 	}
 
 	@RequestMapping("/login")
-	public String login(String flag, @ModelAttribute User user, ModelAndView mav, HttpSession session) {
-		return flag;
+
+	public ModelAndView login(String flag, String username, String password, ModelAndView mav, HttpSession session) {
+		if (flag == null) {
+			flag = "1";
+		}
+		if (flag.equals("1")) {
+			System.out.println("login 1");
+			mav.setViewName("/login.html");
+		} else if (flag.equals("2")) {
+
+			User getuser = userservice.checkUsername(username);
+			System.out.println(getuser);
+			String getpassword = "";
+
+			if (getuser == null) {
+
+				System.out.println("用户名不正确");
+				// mav.setViewName("redirect:/error");
+				mav.addObject("message", "用户名不正确");
+				mav.setViewName("/login.html");
+			} else {
+				getpassword = getuser.getpassword();
+				if (getpassword.equals(password)) {
+					System.out.println("登陆成功");
+					// mav.addObject("username", getuser.getUsername());
+					session.setAttribute("user_session", getuser);
+
+					if (getuser.getAdmin() == 1) {
+						// mav.addObject("admin", "管理员");
+						mav.setViewName("redirect:/admin");
+					} else {
+						// mav.addObject("admin", "普通用户");
+						mav.setViewName("redirect:/articles");
+					}
+
+				} else {
+					System.out.println("密码不正确");
+					mav.addObject("message", "密码不正确");
+					mav.setViewName("/login.html");
+				}
+			}
+		} else {
+			System.out.println("flag is " + flag);
+		}
+
+		return mav;
 
 	}
-
-	// public ModelAndView login(String flag, @ModelAttribute User user,
-	// ModelAndView mav, HttpSession session) {
-	// if (flag == null) {
-	// flag = "1";
-	// }
-	// if (flag.equals("1")) {
-	// System.out.println("login 1");
-	// mav.setViewName("/login.jsp");
-	// } else if (flag.equals("2")) {
-	//
-	// String username = user.getUsername();
-	// User getuser = userservice.checkUsername(username);
-	// System.out.println(getuser);
-	// String password = "";
-	//
-	// if (getuser == null) {
-	//
-	// System.out.println("用户名不正确");
-	// // mav.setViewName("redirect:/error");
-	// mav.addObject("message", "用户名不正确");
-	// mav.setViewName("/login.jsp");
-	// } else {
-	// password = getuser.getpassword();
-	// if (password.equals(user.getpassword())) {
-	// System.out.println("登陆成功");
-	// // mav.addObject("username", getuser.getUsername());
-	// session.setAttribute("user_session", getuser);
-	//
-	// if (getuser.getAdmin() == 1) {
-	// // mav.addObject("admin", "管理员");
-	// mav.setViewName("redirect:/listUsers");
-	// } else {
-	// // mav.addObject("admin", "普通用户");
-	// mav.setViewName("redirect:/artcles");
-	// }
-	//
-	// } else {
-	// System.out.println("密码不正确");
-	// // mav.setViewName("redirect:/error");
-	// mav.addObject("message", "密码不正确");
-	// mav.setViewName("/login.jsp");
-	// }
-	// }
-	// } else {
-	// System.out.println("flag is " + flag);
-	// }
-	//
-	// return mav;
-	//
-	// }
 }

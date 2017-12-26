@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import springmvc.model.Artcle;
+import springmvc.model.Article;
 import springmvc.model.User;
-import springmvc.service.ArtcleService;
+import springmvc.service.ArticleService;
 
 @Controller
 public class SimplePageController {
 
 	@Autowired
-	ArtcleService service;
+	ArticleService service;
 
 	@RequestMapping(value = "/footer")
 	public ModelAndView footer(ModelAndView mav) {
@@ -32,16 +32,21 @@ public class SimplePageController {
 		return mav;
 	}
 
+	@RequestMapping("/contact")
+	public String contact() {
+		return "contact.html";
+	}
+
 	/*
 	 * 列出所有的文章
 	 */
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public ModelAndView listArtcles(ModelAndView mav, HttpSession session) {
 		System.out.println("listArtcles");
-		List<Artcle> artcles;
+		List<Article> articles;
 		User user = new User();
-		artcles = service.list();
-		if (artcles == null) {
+		articles = service.list();
+		if (articles == null) {
 
 		} else {
 
@@ -55,18 +60,13 @@ public class SimplePageController {
 
 			mav.addObject("user", user);
 
-			for (Artcle artcle : artcles) {
-				System.out.println(artcle);
+			for (Article article : articles) {
+				System.out.println(article);
 			}
-			mav.addObject("artcles", artcles);
+			mav.addObject("articles", articles);
 			mav.setViewName("/main.html");
 		}
 		return mav;
-	}
-
-	@RequestMapping("/contract")
-	public String contract() {
-		return "contract.html";
 	}
 
 	@RequestMapping("/left")

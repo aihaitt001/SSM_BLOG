@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import springmvc.model.User;
@@ -19,34 +20,6 @@ public class UsersController {
 	@Autowired
 	UserService userservice;
 
-	// public void login(@RequestBody User user, HttpServletResponse response)
-	// throws JsonGenerationException, JsonMappingException, IOException {
-	//
-	// ObjectMapper mapper = new ObjectMapper();
-	// String result = "登陆成功";
-	// response.setContentType("text/html;charset=UTF-8");
-	//
-	// String username = user.getUsername();
-	// String password = userservice.checkUsername(username);
-	// System.out.println(password);
-	// if (password == null) {
-	// System.out.println("用户名不正确");
-	// result = "用户名不正确";
-	// response.getWriter().println(mapper.writeValueAsString(result));
-	//
-	// } else {
-	// if (password.equals(user.getpassword())) {
-	//
-	// // 将result对象转换成json写出到客户端
-	// response.getWriter().println(mapper.writeValueAsString(result));
-	//
-	// } else {
-	// result = "密码不正确";
-	// response.getWriter().println(mapper.writeValueAsString(result));
-	// }
-	// }
-	//
-	// }
 	@RequestMapping("/error")
 	public ModelAndView error(ModelAndView mav) {
 		mav.setViewName("error.jsp");
@@ -101,7 +74,7 @@ public class UsersController {
 		return mav;
 	}
 
-	@RequestMapping("/deleteUser")
+	@RequestMapping(value = "/User/{artcleId}", method = RequestMethod.DELETE)
 	public ModelAndView deleteUser(String ids, ModelAndView mv) {
 		String[] idlist = ids.split(",");
 		for (String id : idlist) {
@@ -114,7 +87,7 @@ public class UsersController {
 	/**
 	 * flag为判定是进入更新页面（1）。还是提交更新页面（2）。
 	 **/
-	@RequestMapping("/updateUser")
+	@RequestMapping(value = "/User/updateUser")
 	public ModelAndView updateUser(String flag, @ModelAttribute User user, ModelAndView mv) {
 		if (flag != null) {
 			if (flag.equals("1")) {

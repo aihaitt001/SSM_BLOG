@@ -55,6 +55,7 @@ public class LoginedInterceptor implements HandlerInterceptor {
 				System.out.println("允许通过！");
 				request.getSession().setMaxInactiveInterval(1200);
 				islogined = true;
+
 			}
 		}
 

@@ -7,13 +7,13 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
-import springmvc.controller.ArtcleController;
+import springmvc.controller.ArticlesController;
 
 public class GetArtcleByArtcleIdTest {
 
 	@Test
 	public void testGetArtcleByArtcleId() throws Exception {
-		ArtcleController con = new ArtcleController();
+		ArticlesController con = new ArticlesController();
 
 		MockMvc mock = standaloneSetup(con).build();
 		mock.perform(get("/artcles/1")).andExpect(view().name("artcle.html"));

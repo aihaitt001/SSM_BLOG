@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springmvc.mapper.ArticlesMapper">
+	<insert id="add" parameterType="Article">
+		insert into articles(articleId,title,tags,body,author,createtime) values
+		(#{articleId},#{title},#{tags},#{body},#{author},#{createtime})
+	</insert>
+	
+	
+	<select id="getByArticleId" parameterType="Integer" resultType="Article">
+		select * from articles where articleId=#{articleId}
+
+	</select>
+	<delete id="delete" parameterType="Integer">
+		delete from articles where articleId = #{articleId}
+	</delete>
+	
+	<update id="update" parameterType="Article">
+		update articles set title=#{title},tags=#{tags},
+		body=#{body},author=#{author},createtime=#{createtime} where articleId=#{articleId}
+	</update>
+	<select id="list" resultType="Article">
+
+		select * from articles
+	</select>
+
+</mapper>

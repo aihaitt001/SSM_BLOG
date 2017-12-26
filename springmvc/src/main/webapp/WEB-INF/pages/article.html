@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+		
+	<head>
+		<meta charset="UTF-8">
+		<title>Article</title>
+		
+		<script type="text/javascript" src="/springmvc/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="/springmvc/js/json2.js"></script>
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+		<script type="text/javascript">
+		
+			$(document).ready(function(){
+				
+					
+					
+					
+			});
+		</script>
+	</head>
+	<body style="padding:70px">
+	 	<!-- header 开始-->
+		<div class="container">
+			<div class="row clearfix">				
+				<div class="col-md-12 column">
+				    <!-- 导航条 开始-->
+					<div th:replace="nav.html :: copy"></div>
+					<!-- 导航条 结束 -->	
+				</div>	 	
+			</div>
+		</div>
+		 <!-- header 结束-->
+		
+		
+		<div class="container">
+			<!-- 内容区 开始-->
+			<div class="row clearfix">
+			   <!-- 文章 开始 -->
+				<div class="col-md-12 column" th:id="'article_' + ${article.articleId}">
+			 
+			    	<table class="table">
+						<thead>
+							<tr>
+								<th>
+									<h2 th:text="${article.title}">title</h2>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr >
+								<td>
+								    <div >
+										<p th:text="${article.body}">body</p>
+										<p>
+											Created By <a th:text="${article.author}">author  </a><label th:text="' On '+${article.createtime}">createtime</label>    
+										</p> 
+								    </div>
+								</td>		
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 文章 结束 -->
+			</div>
+			<!-- 内容区 结束 -->
+		</div>
+	</body>
+	<footer  th:replace="footer.html :: copy"></footer>
+
+ 
+</html>
