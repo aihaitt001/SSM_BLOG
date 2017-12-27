@@ -13,6 +13,11 @@
 		select * from articles where articleId=#{articleId}
 
 	</select>
+	
+	<select id="listByAuthor" parameterType="String" resultType="Article">
+		select * from articles where author = #{author}
+	
+	</select>
 	<delete id="delete" parameterType="Integer">
 		delete from articles where articleId = #{articleId}
 	</delete>

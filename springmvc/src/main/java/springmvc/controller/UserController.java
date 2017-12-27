@@ -22,22 +22,24 @@ public class UserController {
 	public ModelAndView user(ModelAndView mav, HttpSession session) {
 		List<Article> articles;
 		User user = new User();
-		articles = service.list();
+
+		String sessionname = "游客";
+
+		if (session.getAttribute("user_session") != null) {
+			user = (User) session.getAttribute("user_session");
+			sessionname = user.getUsername();
+			// System.out.println(user);
+		}
+
+		articles = service.listByAuthor(user.getUsername());
+
+		user.setUsername(sessionname);
+
+		mav.addObject("user", user);
+
 		if (articles == null) {
-
+			mav.setViewName("/login.html");
 		} else {
-
-			String sessionname = "游客";
-
-			if (session.getAttribute("user_session") != null) {
-				user = (User) session.getAttribute("user_session");
-				sessionname = user.getUsername();
-				// System.out.println(user);
-			}
-
-			user.setUsername(sessionname);
-
-			mav.addObject("user", user);
 
 			mav.addObject("articles", articles);
 			mav.setViewName("/user.html");

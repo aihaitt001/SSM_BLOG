@@ -69,7 +69,7 @@ public class LoginController {
 				mav.addObject("message", "用户名不正确");
 				mav.setViewName("/login.html");
 			} else {
-				getpassword = getuser.getpassword();
+				getpassword = getuser.getPassword();
 				if (getpassword.equals(password)) {
 					System.out.println("登陆成功");
 					// mav.addObject("username", getuser.getUsername());
@@ -80,7 +80,7 @@ public class LoginController {
 						mav.setViewName("redirect:/admin");
 					} else {
 						// mav.addObject("admin", "普通用户");
-						mav.setViewName("redirect:/articles");
+						mav.setViewName("redirect:/user");
 					}
 
 				} else {

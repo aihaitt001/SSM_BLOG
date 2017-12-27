@@ -11,6 +11,8 @@ public interface ArticleService {
 
 	public List<Article> list();
 
+	public List<Article> listByAuthor(String author);
+
 	public Article getByArticleId(Integer articleId);
 
 	public void update(Article article);

@@ -39,4 +39,9 @@ public class ArticleServiceImpt implements ArticleService {
 		articlemapper.update(article);
 	}
 
+	public List<Article> listByAuthor(String author) {
+		// TODO Auto-generated method stub
+		return articlemapper.listByAuthor(author);
+	}
+
 }
