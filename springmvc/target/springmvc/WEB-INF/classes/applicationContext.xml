@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<!-- 
+	<bean id="loginLoggerMethod" class="springmvc.aop.LoginLoggerMethod"/>
+		
+	<aop:config>
+		
+		<aop:aspect ref="loginLoggerMethod">
+			<aop:pointcut expression="execution(** springmvc.controller.LoginController.login(..))" id="logined"/>
+			<aop:before pointcut-ref="logined" method="beforeLogin"/>
+			<aop:after pointcut-ref="logined" method="afterLogin"/>
+			<aop:after-returning pointcut-ref="logined" method="afterReturn"/>
+			<aop:after-throwing pointcut-ref="logined" method="afterThrow"/>
+		</aop:aspect>
+	</aop:config>
+	
+	 -->
+	 
+	<context:annotation-config />
+	<context:component-scan base-package="springmvc.service" />
+
+    
+<!-- <util:properties id="db" location="classpath:dataBase.properties"/>
+     <property name="driverClassName">
+			<value>#[db{mysql.jdbc.driverClassName}]</value>
+		</property> -->
+<context:property-placeholder location="classpath:dataBase.properties" ignore-unresolvable="true"/>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>${mysql.jdbc.driverClassName}</value>
+		</property>
+		<property name="url">
+			<value>${mysql.jdbc.url}</value>
+
+		</property>
+		<property name="username">
+			<value>${mysql.jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${mysql.jdbc.password}</value>
+			<!--aliyun mysql //Asp@ssw0rd -->
+		</property>
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="typeAliasesPackage" value="springmvc.model" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:springmvc/mapper/*.xml" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="springmvc.mapper" />
+	</bean>
+
+</beans>
