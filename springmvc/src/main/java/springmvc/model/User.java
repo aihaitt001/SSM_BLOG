@@ -1,6 +1,7 @@
 package springmvc.model;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class User {
 	private Integer id;
@@ -9,6 +10,31 @@ public class User {
 	private String email;
 	private Timestamp createtime;
 	private Integer admin;
+
+	public String getRole() {
+		String role = "";
+		if (admin == 1) {
+			role = "admin";
+		} else if (admin == 2) {
+			role = "user";
+		} else {
+			role = "people";
+		}
+		return role;
+	}
+
+	public ArrayList<String> getPermissions() {
+		ArrayList<String> permissions = new ArrayList<String>(3);
+		if (admin == 1) {
+			permissions.add("admin:manage");
+			permissions.add("user:manage");
+		} else if (admin == 2) {
+			permissions.add("user:manage");
+		} else {
+			permissions.add("visitor:read");
+		}
+		return permissions;
+	}
 
 	public void setId(Integer id) {
 		this.id = id;

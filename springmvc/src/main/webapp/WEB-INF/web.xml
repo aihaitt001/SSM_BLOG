@@ -6,12 +6,7 @@
 	
 	
 	<!-- 读取spring和shiro配置文件 -->
-	<context-param>
-	    <param-name>contextConfigLocation</param-name>
-	    <param-value>classpath:spring-shiro.xml</param-value>
-	</context-param>
 	
-	<!-- shiro过滤器 -->
 	<filter>  
 	    <filter-name>shiroFilter</filter-name>  
 	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>  

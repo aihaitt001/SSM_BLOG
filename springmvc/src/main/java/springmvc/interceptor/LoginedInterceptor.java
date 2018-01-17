@@ -45,7 +45,7 @@ public class LoginedInterceptor implements HandlerInterceptor {
 		}
 
 		if (!islogined) {
-			User user = (User) request.getSession().getAttribute("user_session");
+			User user = (User) request.getSession().getAttribute("currentUser");
 			if (user == null) {
 				System.out.println("先登录！");
 				// request.setAttribute("message", "请先登陆！");

@@ -4,15 +4,15 @@
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
-        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
 
-<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	<context:component-scan base-package="springmvc.aop"/>
  	
 	  	
@@ -21,16 +21,16 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	
- <!-- 自定义的登陆拦截器，用shiro来代替权限管理，详情见spring-shiro.xml
- <mvc:interceptors>
+ <!-- 自定义的登陆拦截器，用shiro来代替权限管理，详情见spring-shiro.xml-->
+ <!--<mvc:interceptors>
        
          <bean class="springmvc.interceptor.LoginedInterceptor"/>
        
-  	</mvc:interceptors>
-  -->  	  
+  	</mvc:interceptors>  -->
+  	  
   	
 
-	<!-- 设置配置方案  -->
+	<!--启用注解  -->
 	<mvc:annotation-driven/>
     
 	<!-- 使用默认的Servlet来响应静态文件 -->

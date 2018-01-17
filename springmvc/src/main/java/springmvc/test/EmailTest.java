@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.mail.SimpleMailMessage;
 
-import springmvc.util.EmailUtilImpl;
+import springmvc.email.EmailUtilImpl;
 
 public class EmailTest {
 

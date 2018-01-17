@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,62 +18,75 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import springmvc.model.Article;
+import springmvc.model.Message;
 import springmvc.model.User;
-import springmvc.service.UserService;
+import springmvc.service.ArticleService;
 
 /*
- * 
- * 管理员对用户管理请求的处理
+ * 用户对文章进行管理的请求处理。
  * 
  * */
 @Controller
-@RequestMapping("/admin/user")
-public class UserController {
+@RequestMapping("/article")
+public class ArticleController {
 	@Autowired
-	UserService service;
+	ArticleService service;
 
 	/*
-	 * 新增用户
+	 * 新增文章
 	 */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST)
-	public String adduser(@RequestBody User user) {
-		System.out.println("adduser");
+	public String addarticle(@RequestBody Article article, HttpServletRequest request) throws Exception {
+		System.out.println("addarticle");
 
 		Date date = new Date();
 		Timestamp createtime = new Timestamp(date.getTime());
-		user.setCreatetime(createtime);
-
-		service.add(user);
-
-		return "add success";
+		article.setCreatetime(createtime);
+		User user = (User) request.getSession().getAttribute("currentUser");
+		article.setAuthor(user.getUsername());
+		System.out.println(article);
+		service.add(article);
+		Message result = new Message();
+		result.setCurrentuser(user.getUsername());
+		result.setResult("新增成功！" + user.getUsername());
+		ObjectMapper map = new ObjectMapper();
+		String message = map.writeValueAsString(result);
+		return message;
 
 	}
 
 	/*
-	 * 用户修改
+	 * 文章修改
 	 */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.PUT)
-	public String updateuserByuserId(@RequestBody User user) {
-		System.out.println("updateuser:" + user);
+	public String updatearticleByarticleId(@RequestBody Article article) {
+		System.out.println("updatearticle:" + article);
+
 		Date date = new Date();
 		Timestamp createtime = new Timestamp(date.getTime());
-		user.setCreatetime(createtime);
-		service.update(user);
-		return "update success";
+		article.setCreatetime(createtime);
+		service.update(article);
+		return "修改成功";
 	}
 
 	/*
-	 * 删除用户
+	 * 删除文章
 	 */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.DELETE)
-	public String deleteuserByuserId(@RequestBody String userids) throws IOException {
-
+	public String deletearticleByarticleId(@RequestBody String articleids) throws IOException {
+		//
+		// String[] idlist = ids.split(",");
+		// for (String id : idlist) {
+		// service.delete(Integer.valueOf(id));
+		// System.out.println("deletearticleByarticleId:" + id);
+		// }
 		ObjectMapper mapper = new ObjectMapper(); // 转换器
 
-		Map m = mapper.readValue(userids, Map.class);
+		Map m = mapper.readValue(articleids, Map.class);
 		ArrayList<Object> list = new ArrayList<Object>();
 		for (Object obj : m.keySet()) {
 			System.out.println("key为：" + obj + "值为：" + m.get(obj).getClass().getName());
@@ -92,10 +107,10 @@ public class UserController {
 
 			}
 
+			// System.out.println(list.get(i).getClass().getName());
 		}
 
-		return "delete success";
+		return "删除成功";
 
 	}
-
 }
