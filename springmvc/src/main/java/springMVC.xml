@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<context:component-scan base-package="springmvc.aop"/>
+ 	
+	  	
+    <context:component-scan base-package="springmvc.controller">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+ <!-- 自定义的登陆拦截器，用shiro来代替权限管理，详情见spring-shiro.xml-->
+ <!--<mvc:interceptors>
+       
+         <bean class="springmvc.interceptor.LoginedInterceptor"/>
+       
+  	</mvc:interceptors>  -->
+  	  
+  	
+
+	<!--启用注解  -->
+	<mvc:annotation-driven/>
+    
+	<!-- 使用默认的Servlet来响应静态文件 -->
+    <mvc:default-servlet-handler/>
+    
+     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"> 
+               
+	    <property name="messageConverters">  
+	        <list>  
+	            <ref bean="jsonHttpMessageConverter" />  
+	        </list>  
+	    </property>  
+	</bean>  
+	  
+	<bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">  
+	                                          
+	    <property name="supportedMediaTypes">  
+	        <list>  
+	            <value>application/json;charset=UTF-8</value>  
+	        </list>  
+	    </property>  
+	</bean>  
+	<!-- 视图定解析-->
+	
+    
+    <bean id="templateResolver"
+          class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="WEB-INF/pages/" />
+       <!--  <property name="suffix" value=".html" />-->
+        <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="templateEngine"
+          class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+    <!--  配置多个视图解析-->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+
+        <property name="viewResolvers">
+            <list>
+                <!--used thymeleaf  -->
+                <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+                    <property name="characterEncoding" value="UTF-8"/>
+                    <property name="templateEngine" ref="templateEngine" />
+                 <property name="viewNames" value="*.html" />   
+                   <!-- <property name="order" value="2" /> --> 
+                </bean>
+                <!-- used jsp -->
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix" value="/WEB-INF/jsp/"/>
+                    <!-- <property name="suffix" value=".jsp"/> -->
+                    <property name="viewNames" value="*.jsp" />
+                    <!-- <property name="order" value="1" /> -->
+                </bean>
+
+            </list>
+        </property>
+    </bean>
+</beans>

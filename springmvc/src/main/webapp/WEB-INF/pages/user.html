@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+		
+	<head>
+		<meta charset="UTF-8">
+		<title>user</title>
+		<script type="text/javascript" src="/springmvc/js/json2.js"></script>
+		<script type="text/javascript" src="/springmvc/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="/springmvc/js/jqBootstrapValidation.js"></script>
+		<script type="text/javascript" src="/springmvc/js/login.js"></script>
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="/springmvc/css/bootstrap.min.css" rel="stylesheet">
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="/springmvc/js/bootstrap.min.js"></script>
+	
+		<script type="text/javascript">
+		
+			$(document).ready(function(){
+				login();
+				selectArtcles();
+				
+				 
+				 $("#addButton").click(function(){
+					 addArticle();
+					 
+				 });
+				 
+			});
+			
+			function addArticle(){
+				
+	 			var title = $("#new_title").val();
+	 			
+	 			var tags = $("#new_tags").val();
+	 			var body = $("#new_body").val();
+	 			//alert(title+tags+body);
+	 			var article = {title:title,tags:tags,body:body};
+	 			
+	 			//var article_val  = JSON.stringify(article);
+	 			
+	 			$.ajax({
+	 				 type: "POST",
+	 				 contentType : 'application/json;charset=utf-8',
+	 		            url: "/springmvc/article" ,
+	 		            data: JSON.stringify(article),   
+	 		            dataType: 'JSON', //返回数据类型
+	 		            success: function (message) {
+	 		            	alert(message.result);
+	 		            	location.reload(true);
+	 		            	
+	 		            },
+	 		            error: function (e) {
+	 		                alert("error:"+e);
+	 		            }
+	 			});
+			}
+			 	  function updateArticle(id){
+			 		
+			 			var articleid = $("#article_id"+id).text();
+			 			var title = $("#input_title"+id).val();
+			 			var author = $("#input_author"+id).val();
+			 			var tags = $("#input_tags"+id).val();
+			 			var body = $("#input_body"+id).val();
+			 		//	alert(id+title+author+tags+body);
+			 			var article = {articleId:articleid,title:title,author:author,tags:tags,body:body};
+			 			
+			 			//var article_val  = JSON.stringify(article);
+			 			
+			 			$.ajax({
+			 				 type: "PUT",
+			 				 contentType : 'application/json;charset=utf-8',
+			 		            url: "/springmvc/article" ,
+			 		            data: JSON.stringify(article),   
+			 		            dataType: 'text', //返回数据类型
+			 		            success: function () {
+			 		            	alert("update done");
+			 		            	location.reload(true);
+			 		            },
+			 		            error: function (e) {
+			 		                alert("error:"+e);
+			 		            }
+			 			});
+			 		
+			 	  }
+			 	  
+			 	  
+			 	  function selectArtcles(){
+			 		 /** 获取上一次选中的部门数据 */
+				 	   var boxs  = $("input[type='checkbox'][id^='box_']");
+				 	   
+				 	  /** 给数据行绑定鼠标覆盖以及鼠标移开事件  */
+				    	$("tr[id^='data_']").hover(function(){
+				    		$(this).css("backgroundColor","#eeccff");
+				    	},function(){
+				    		$(this).css("backgroundColor","#ffffff");
+				    	})
+				    	
+				    	
+				 	   /** 删除文章绑定点击事件 */
+				 	   $("#delete_button").click(function(){
+				 		   /** 获取到用户选中的复选框  */
+				 		   var checkedBoxs = boxs.filter(":checked");
+				 		   if(checkedBoxs.length < 1){
+				 			   alert("请选择一个需要删除的文章！");
+				 		   }else{
+				 			   /** 得到用户选中的所有的需要删除的ids */
+				 			   var ids = checkedBoxs.map(function(){
+				 				   return this.value;
+				 			   })
+				 			    if( window.confirm("确认要删除吗?")){
+				 					 deletearticle(ids); 
+
+				 			    }
+				 		   }
+						});
+			 	  }
+			    	function deletearticle(ids) {
+			    		var i = 0;
+			    		var idlist = ids.get();
+			    		var articleids = "{\"articleids\":";
+						//alert(articleids);
+						if(ids.length==1){
+							articleids = articleids+"[{\"articleId\":\""+idlist[0]+"\"}]}"
+						}
+						else{
+							articleids = articleids+"[";
+							for(var id in idlist){
+				    			i++;
+				    			if(i<ids.length){
+				    				articleids = articleids+"{\"articleId\":\""+idlist[i-1]+"\"},";
+				    			}else{
+				    				
+				    				articleids = articleids+"{\"articleId\":\""+idlist[i-1]+"\"}]}";
+				    			}
+				    		}
+			    		}
+						
+			    	
+			            $.ajax({
+			                
+			            	 contentType : 'application/json;charset=utf-8',
+				                type: "DELETE",
+				                url: "/springmvc/article",
+				                data:articleids,
+				                
+				                dataType: 'text', 
+				                async: true,
+				                success: function (response) {
+				                	alert(response);
+				                	location.reload(true);
+ 			                     
+			                },
+			                error: function (e) {
+			                    alert("articles doesn't found or "+e);
+			                }
+			            });
+			    	} 
+			
+		</script>
+	</head>
+	<body style="padding:70px">
+	 	<!-- header 开始-->
+		<div class="container">
+			<div class="row clearfix">				
+				<div class="col-md-12 column">
+				    <!-- 导航条 开始-->
+					<div th:replace="nav.html :: copy"></div>
+					<!-- 导航条 结束 -->	
+				</div>	 	
+					
+			</div>
+		</div>
+		 <!-- header 结束-->
+		<hr>
+		
+		<div class="container">
+			<!-- 内容区 开始-->
+			<div class="row clearfix">
+			
+			<button id="addarticle" data-toggle="modal" data-target="#addModal" >新增文章</button>
+			<!-- 模态框（Modal） -->
+				<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="myModalLabel">
+									新增
+								</h4>
+							</div>
+							<div class="modal-body">
+								<div>title:<input  id="new_title" class="articleTitle"></input> </div>               
+					            <div>tags:<input  id="new_tags" class="articleTags" ></input></div>
+					            <div>body:<input  id="new_body" class="articleBody"></input> </div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+								<button id="addButton" type="button" class="btn btn-primary">
+									新增
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal -->
+				</div>
+				<table class="table">
+					<thead>
+						<tr><td><button id="delete_button" class="btn btn-primary" data-loading-text="删除中..." type="button">删除</button></td></tr>
+						<tr>
+							
+							<th>id</th> 
+							<th>标题</th>					
+							<th>时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+					    
+						<tr th:each="article : ${articles}">
+							
+							 	<td><input type="checkbox" id="box_${article.articleId}" th:value="${article.articleId}"></td>
+								<td><a class="btn" th:text="${article.title}" th:href="'/springmvc/articles/'+${article.articleId}"></a></td>
+							    <td><p th:text="${article.createtime}"></p></td>
+							    <td><button th:id="'change_'+${article.articleId}" type="button" class="btn btn-primary" data-loading-text="Loading..."  data-toggle="modal" data-target="#updateModal" th:attr="data-target='#updateModal_'+${article.articleId}">修改</button>
+							    	<!-- 模态框（Modal） -->
+									<div class="modal fade" th:id="'updateModal_'+${article.articleId}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+														&times;
+													</button>
+													<h4 class="modal-title" id="myModalLabel">
+														文章修改
+													</h4>
+												</div>
+												<div class="modal-body">
+													<div><p th:id="'article_id'+${article.articleId}" class="articleId" th:text="${article.articleId}" ></p> </div>
+													<div>id:<input  th:id="'input_title'+${article.articleId}" class="articleTitle" th:value="${article.title}" ></input> </div>               
+						            				<div>author:<input  th:id="'input_author'+${article.articleId}" class="articleAuthor" th:value="${article.author}"></input> </div>
+										            <div>tags:<input  th:id="'input_tags'+${article.articleId}" class="articleTags" th:value="${article.tags}" ></input></div>
+										            <div>body:<input  th:id="'input_body'+${article.articleId}" class="articleBody" th:value="${article.body}"></input> </div>
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+													</button>
+													<button id="changeButton" type="button" class="btn btn-primary" th:onclick="'javascript:updateArticle('+${article.articleId}+');'">
+														修改
+													</button>
+												</div>
+											</div><!-- /.modal-content -->
+										</div><!-- /.modal -->
+									</div>
+									<!-- 模态框结束 -->
+							    </td>
+								
+						</tr>
+						
+					
+					</tbody>
+				</table>
+			
+					
+			</div>
+			<!-- 内容区 结束 -->
+		</div>
+	</body>
+	<hr>
+	<footer  th:replace="footer.html :: copy"></footer>
+
+ 
+</html>
