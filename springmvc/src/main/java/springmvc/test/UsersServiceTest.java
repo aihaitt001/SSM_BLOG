@@ -17,44 +17,14 @@ public class UsersServiceTest {
 	UserService service;
 
 	@Test
-	public void list() {
-		System.out.println(service.list());
-
-	}
-
-	@Test
-	public void Delete() {
-		service.delete(6);
-	}
-
-	@Test
 	public void Add() {
 		User user = new User();
 
 		user.setAdmin(1);
 		user.setEmail("106129@qq.com");
-		user.setPassword("ovo");
-		user.setUsername("董静波");
+		user.setPassword("123456");
+		user.setUsername("djb");
 		service.add(user);
-
-	}
-
-	@Test
-	public void Update() {
-
-		User user = new User();
-
-		user.setUsername("aab");
-		user.setAdmin(1);
-		user.setEmail("aab@qq.com");
-		user.setPassword("aab");
-		service.update(user);
-	}
-
-	@Test
-	public void getByUsername() {
-
-		System.out.println(service.getById(8));
 
 	}
 

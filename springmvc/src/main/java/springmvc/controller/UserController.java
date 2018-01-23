@@ -1,9 +1,7 @@
 package springmvc.controller;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -38,10 +36,7 @@ public class UserController {
 	public String adduser(@RequestBody User user) {
 		System.out.println("adduser");
 
-		Date date = new Date();
-		Timestamp createtime = new Timestamp(date.getTime());
-		user.setCreatetime(createtime);
-
+		// MD5Util.EncryptUser(user);
 		service.add(user);
 
 		return "add success";
@@ -55,9 +50,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public String updateuserByuserId(@RequestBody User user) {
 		System.out.println("updateuser:" + user);
-		Date date = new Date();
-		Timestamp createtime = new Timestamp(date.getTime());
-		user.setCreatetime(createtime);
+
 		service.update(user);
 		return "update success";
 	}

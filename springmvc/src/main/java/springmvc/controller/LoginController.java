@@ -1,8 +1,5 @@
 package springmvc.controller;
 
-import java.sql.Timestamp;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +15,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,7 +34,7 @@ public class LoginController {
 	@ResponseBody
 	@RequestMapping("/check_loginning")
 	public String check_loginning(HttpServletRequest request, HttpSession session) {
-		logger.info("check_loginning");
+		// logger.info("check_loginning");
 		Subject currentUser = SecurityUtils.getSubject();
 		ObjectMapper mapper = new ObjectMapper();
 		String message = "";
@@ -48,41 +44,59 @@ public class LoginController {
 				message = mapper.writeValueAsString(user);
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
-				logger.info("user转换json失败" + e);
+				logger.error("user转换json失败" + e);
 				return message;
 			}
-			logger.info(message + "已登录 ");
+			// logger.info(message + "已登录 ");
 		} else {
 
-			logger.info(message + "未登录 ");
+			// logger.info(message + "未登录 ");
 		}
 		return message;
 	}
 
 	@RequestMapping("/register")
-	public ModelAndView register(String flag, @ModelAttribute User user, ModelAndView mav, HttpSession session) {
+	public ModelAndView register(String flag, String username, String password, String email, ModelAndView mav) {
+		String viewname = "register.html";
+		String result = "请输入相应信息后点击“注册”按钮";
 		if (flag == null) {
 			flag = "1";
 		}
-
 		if (flag.equals("1")) {
-			mav.setViewName("register.jsp");
-			System.out.println("register  1");
+			logger.info("register  1");
+			result = "";
 		} else {
-			System.out.println("register  2");
+			if (null != username || username != "" || password != "" || null != password) {
+				if (null != userservice.checkUsername(username)) {
+					result = "用户名" + username + "重复";
+					// logger.error(result);
+					mav.addObject("result", result);
+					mav.setViewName(viewname);
+					return mav;
+				} else {
+					logger.info("register  2");
+					User user = new User();
+					user.setAdmin(2);
+					user.setEmail(email);
+					user.setPassword(password);
+					user.setUsername(username);
+					logger.info("新增用户" + user.getUsername());
+					try {
+						userservice.add(user);
+						viewname = "redirect:/login";
+					} catch (Exception e) {
+						result = "注册时发生错误：" + e.toString();
+					} finally {
+						logger.error(result);
 
-			Date date = new Date();
+					}
 
-			Timestamp createtime = new Timestamp(date.getTime());
-			System.out.println(createtime);
-			user.setCreatetime(createtime);
+				}
+			}
 
-			System.out.println(user);
-			userservice.add(user);
-			session.setAttribute("currentUser", user);
-			mav.setViewName("redirect:articles");
 		}
-
+		mav.addObject("result", result);
+		mav.setViewName(viewname);
 		return mav;
 
 	}
@@ -91,12 +105,12 @@ public class LoginController {
 	 * 用户登录
 	 */
 	@RequestMapping(value = "/login")
-	public ModelAndView login(HttpServletRequest request, String flag, String username, String password,
-			ModelAndView mav) {
+	public ModelAndView login(String flag, String username, String password, ModelAndView mav) {
 		String result = "/login.html";
 		String message = "点击按钮登陆";
 		if (flag == null) {
 			flag = "1";
+			message = "";
 		}
 		if (flag.equals("1")) {
 

@@ -7,6 +7,8 @@ import springmvc.model.User;
 public interface UserService {
 	User checkUsername(String username);
 
+	User checkLogin(String username);
+
 	String checkEmail(String email);
 
 	List<User> list();

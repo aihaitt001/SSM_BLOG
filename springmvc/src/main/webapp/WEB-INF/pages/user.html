@@ -59,11 +59,10 @@
 			 		
 			 			var articleid = $("#article_id"+id).text();
 			 			var title = $("#input_title"+id).val();
-			 			var author = $("#input_author"+id).val();
 			 			var tags = $("#input_tags"+id).val();
 			 			var body = $("#input_body"+id).val();
 			 		//	alert(id+title+author+tags+body);
-			 			var article = {articleId:articleid,title:title,author:author,tags:tags,body:body};
+			 			var article = {articleId:articleid,title:title,tags:tags,body:body};
 			 			
 			 			//var article_val  = JSON.stringify(article);
 			 			
@@ -192,16 +191,24 @@
 								</h4>
 							</div>
 							<div class="modal-body">
-								<div>title:<input  id="new_title" class="articleTitle"></input> </div>               
-					            <div>tags:<input  id="new_tags" class="articleTags" ></input></div>
-					            <div>body:<input  id="new_body" class="articleBody"></input> </div>
+								<div class="input-group ">
+									<span class="input-group-addon">标题</span>
+									<input type="text" id="new_title" class="form-control" placeholder="展示在首页的内容">
+								</div><br>
+								<div class="input-group ">
+									<span class="input-group-addon">标签</span>
+									<input type="text" id="new_tags" class="form-control" placeholder="每个标签之间请以“，”隔开">
+								</div><br>
+								<div>
+						            <textarea id="new_body" name="body" class="form-control" rows="12"></textarea>   		
+								</div>
 							</div>
-							<div class="modal-footer">
+							<div class="modal-footer ">
+								<button id="addButton" type="button" class="btn btn-primary">新增
+								</button>
 								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 								</button>
-								<button id="addButton" type="button" class="btn btn-primary">
-									新增
-								</button>
+								
 							</div>
 						</div><!-- /.modal-content -->
 					</div><!-- /.modal -->
@@ -238,18 +245,27 @@
 													</h4>
 												</div>
 												<div class="modal-body">
-													<div><p th:id="'article_id'+${article.articleId}" class="articleId" th:text="${article.articleId}" ></p> </div>
-													<div>id:<input  th:id="'input_title'+${article.articleId}" class="articleTitle" th:value="${article.title}" ></input> </div>               
-						            				<div>author:<input  th:id="'input_author'+${article.articleId}" class="articleAuthor" th:value="${article.author}"></input> </div>
-										            <div>tags:<input  th:id="'input_tags'+${article.articleId}" class="articleTags" th:value="${article.tags}" ></input></div>
-										            <div>body:<input  th:id="'input_body'+${article.articleId}" class="articleBody" th:value="${article.body}"></input> </div>
+													<div><p th:id="'article_id'+${article.articleId}"  th:text="${article.title}"></p></div>
+													<div class="input-group ">
+														<span class="input-group-addon">title</span>
+														<input type="text" th:id="'input_title'+${article.articleId}"  th:value="${article.title}" class="form-control" placeholder="每个标签之间请以“，”隔开">
+													</div><br>
+													<div class="input-group ">
+														<span class="input-group-addon">tags</span>
+														<input type="text" th:id="'input_tags'+${article.articleId}" th:value="${article.tags}" class="form-control" placeholder="每个标签之间请以“，”隔开">
+													</div><br>
+													<div class="input-group ">
+														<span class="input-group-addon">body</span>
+														<input type="text" th:id="'input_body'+${article.articleId}" th:value="${article.body}" class="form-control" placeholder="每个标签之间请以“，”隔开">
+													</div><br>
 												</div>
 												<div class="modal-footer">
-													<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-													</button>
 													<button id="changeButton" type="button" class="btn btn-primary" th:onclick="'javascript:updateArticle('+${article.articleId}+');'">
 														修改
 													</button>
+													<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+													</button>
+													
 												</div>
 											</div><!-- /.modal-content -->
 										</div><!-- /.modal -->

@@ -20,9 +20,18 @@
 	<context:component-scan base-package="springmvc" />
 	
 	
+	
+	 <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">  
+       
+        <property name="hashAlgorithmName" value="MD5"></property> <!-- 加密算法的名称 -->  
+        <property name="hashIterations" value="1024"></property> <!-- 配置加密的次数 -->  
+        <property name="storedCredentialsHexEncoded" value="true"></property> <!-- 是否存储为16进制 -->  
+    </bean>  
 	<!-- shiro配置 -->
 	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->  
-    <bean id="myRealm" class="springmvc.shiro.MyRealm"/>  
+    <bean id="myRealm" class="springmvc.shiro.MyRealm">
+    	<property name="credentialsMatcher" ref="credentialsMatcher" /><!-- 加密配置 -->
+    </bean>  
   
     <!-- 定义缓存管理器 --> 
    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" /> 
@@ -40,10 +49,16 @@
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
         <property name="realm" ref="myRealm"/>
         <!-- 使用配置的缓存管理器 --> 
-     <property name="cacheManager" ref="cacheManager"></property> 
-     <!-- 会话管理 -->
-     <property name="sessionManager" ref="sessionManager" />
-  </bean>  
+    	 <property name="cacheManager" ref="cacheManager"></property> 
+    	 <!-- 会话管理 -->
+     	<property name="sessionManager" ref="sessionManager" />
+ 	 </bean>  
+  
+  
+  <!-- 自定义的控制并发登陆过滤器 -->
+  <bean id="kickoutSessionControlFilter" class="springmvc.shiro.kickoutSessionControlFilter">
+  
+  </bean>
   
     <!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->  
     <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->  
@@ -57,6 +72,13 @@
         <!-- 用户访问未对其授权的资源时,所显示的连接 -->  
         <!-- 若想更明显的测试此属性可以修改它的值,如unauthor.jsp,然后用[玄玉]登录后访问/admin/listUser.jsp就看见浏览器会显示unauthor.jsp -->  
         <property name="unauthorizedUrl" value="/login"/>  
+        <!-- 自定义过滤器配置 -->
+        <property name="filters">
+        	<util:map>
+        		<entry key="kickout" value-ref="kickoutSessionControlFilter">
+        		</entry>
+        	</util:map>
+        </property>
         <!-- Shiro连接约束配置,即过滤链的定义 -->  
         <!-- 此处可配合这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->  
         <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->  
@@ -69,7 +91,7 @@
                  /admin=authc,perms[admin:manage]
                 /admin/**=authc,perms[admin:manage]
                /artcle = authc,perms[user:manage]
-              
+              /** = kickout
    
             </value>  
         </property>  
@@ -110,6 +132,47 @@
         </property>  
     </bean>  
             
+
+
+	<!-- 引入属性文件 -->   
+    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>  
+ <!-- redis config start -->
+    <!-- 配置JedisPoolConfig实例 -->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.maxIdle}" />
+        <property name="maxTotal" value="${redis.maxActive}" />
+        <property name="maxWaitMillis" value="${redis.maxWait}" />
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+    </bean>
+
+    <!-- 配置JedisConnectionFactory -->
+    <bean id="jedisConnectionFactory"
+        class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.host}" />
+        <property name="port" value="${redis.port}" />
+         <property name="password" value="${redis.pass}" /> 
+        <property name="database" value="${redis.dbIndex}" />
+        <property name="poolConfig" ref="poolConfig" />
+    </bean>
+
+    <!-- 配置RedisTemplate -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+    </bean>
+
+    <!-- 配置RedisCacheManager -->
+    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg name="redisOperations" ref="redisTemplate" />
+        <property name="defaultExpiration" value="${redis.expiration}" />
+    </bean>
+
+    <!-- 配置RedisCacheConfig -->
+    <bean id="redisCacheConfig" class="com.ssm.utils.RedisCacheConfig">
+        <constructor-arg ref="jedisConnectionFactory" />
+        <constructor-arg ref="redisTemplate" />
+        <constructor-arg ref="redisCacheManager" />
+    </bean>
+    <!-- redis config end -->
 
 <context:property-placeholder location="classpath:dataBase.properties" ignore-unresolvable="true"/>
 
@@ -153,26 +216,7 @@
      <!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
      <property name="testOnReturn" value="false" />
      </bean>
-     <!-- 
-     <bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName">
-			<value>${mysql.jdbc.driverClassName}</value>
-		</property>
-		<property name="url">
-			<value>${mysql.jdbc.url}</value>
-
-		</property>
-		<property name="username">
-			<value>${mysql.jdbc.username}</value>
-		</property>
-		<property name="password">
-			<value>${mysql.jdbc.password}</value>
-			
-		</property>
-	</bean>
-      -->
-	
+    
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="typeAliasesPackage" value="springmvc.model" />

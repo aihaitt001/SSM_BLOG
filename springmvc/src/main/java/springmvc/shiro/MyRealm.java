@@ -8,7 +8,6 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -16,6 +15,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import springmvc.model.User;
@@ -41,22 +41,21 @@ public class MyRealm extends AuthorizingRealm {
 	 */
 
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
-			throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		// 获取基于用户名和密码的令牌
 		// 实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的
 		// 两个token的引用都是一样的,本例中是org.apache.shiro.authc.UsernamePasswordToken@33799a1e
-		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
+		// UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		// System.out.println(
 		// "验证当前Subject时获取到token为" + token + "username" + token.getUsername() +
 		// "password:" + token.getPassword());
 		User user = new User();
 
-		user = userservice.checkUsername(token.getUsername());
+		user = userservice.checkLogin((String) token.getPrincipal());
 		if (null != user) {
 
 			AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUsername(), user.getPassword(),
-					this.getName());
+					ByteSource.Util.bytes(user.getSalt()), this.getName());
 			this.setSession("currentUser", user);
 			return authcInfo;
 

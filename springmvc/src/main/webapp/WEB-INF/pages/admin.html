@@ -196,17 +196,30 @@
 								</h4>
 							</div>
 							<div class="modal-admin">
-								<div>username:<input  id="new_username" class="userUsername"></input></div>               
-					            <div>password:<input  id="new_password" class="userPassword" ></input></div>
-					            <div>admin:<input  id="new_admin" class="userAdmin"></input> </div>
-					            <div>email:<input  id="new_email" class="userEmail"></input> </div>
+								<div class="input-group ">
+									<span class="input-group-addon">用户名</span>
+									<input type="text" id="new_username"   class="form-control" placeholder="新的用户名">
+								</div><br>
+								<div class="input-group ">
+									<span class="input-group-addon">密码</span>
+									<input type="text" id="new_password"   class="form-control" placeholder="">
+								</div><br>
+								<div class="input-group ">
+									<span class="input-group-addon">权限</span>
+									<input type="text" id="new_admin"   class="form-control" placeholder="输入“1”为管理员，输入“2”为普通用户">
+								</div><br>
+								<div class="input-group ">
+									<span class="input-group-addon">邮箱</span>
+									<input type="text"  id="new_email"    class="form-control" placeholder="">
+								</div><br>
 							</div>
 							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
-								</button>
 								<button id="addButton" type="button" class="btn btn-primary">
 									新增
 								</button>
+								<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+								</button>
+								
 							</div>
 						</div><!-- /.modal-content -->
 					</div><!-- /.modal -->
@@ -247,10 +260,22 @@
 												</div>
 												<div class="modal-admin">
 													<div><p th:id="'user_id'+${user.id}" class="id" th:text="${user.id}" ></p> </div>
-													<div>username:<input  th:id="'input_username'+${user.id}" class="userUsername" th:value="${user.username}" ></input> </div>               
-						            				<div>email:<input  th:id="'input_email'+${user.id}" class="userEmail" th:value="${user.email}"></input> </div>
-										            <div>password:<input  th:id="'input_password'+${user.id}" class="userPassword" th:value="${user.password}" ></input></div>
-										            <div>admin:<input  th:id="'input_admin'+${user.id}" class="useradmin" th:value="${user.admin}"></input> </div>
+													<div class="input-group ">
+														<span class="input-group-addon">新用户名</span>
+														<input type="text" th:id="'input_username'+${user.id}"  th:value="${user.username}"  class="form-control" placeholder="">
+													</div><br>
+													<div class="input-group ">
+														<span class="input-group-addon">新的密码</span>
+														<input type="text" th:id="'input_password'+${user.id}"  th:value="${user.password}"   class="form-control" placeholder="">
+													</div><br>
+													<div class="input-group ">
+														<span class="input-group-addon">新的邮箱</span>
+														<input type="text" th:id="'input_email'+${user.id}"  th:value="${user.email}"   class="form-control" placeholder="">
+													</div><br>
+													<div class="input-group ">
+														<span class="input-group-addon">权限等级</span>
+														<input type="text" th:id="'input_admin'+${user.id}" th:value="${user.admin}"  class="form-control" placeholder="输入“1”为管理员，输入“2”为普通用户">
+													</div>
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-default" data-dismiss="modal">关闭

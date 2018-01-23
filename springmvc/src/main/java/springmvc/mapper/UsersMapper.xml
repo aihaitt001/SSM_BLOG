@@ -4,30 +4,33 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="springmvc.mapper.UsersMapper">
 	<insert id="add" parameterType="User">
-		insert into users(id,username,password,email,createtime,admin) values
-		(#{id},#{username},#{password},#{email},#{createtime},#{admin})
+		insert into users(id,username,password,salt,email,createtime,lastchange,admin) values
+		(#{id},#{username},#{password},#{salt},#{email},#{createtime},lastchange,#{admin})
 	</insert>
+	<select id="checkLogin" parameterType="String" resultType="User">
+	    select id,username,password,salt,admin from users where username=#{username}
+	</select>
 	<select id="checkUsername" parameterType="String" resultType="User">
-	    select * from users where username=#{username}
+	    select id,username,email,createtime,lastchange,admin from users where username=#{username}
 	</select>
 	<select id="checkEmail" parameterType="String" resultType="String">
 	    select username from users where email=#{email}
 	</select>
 	
 	<select id="getById" parameterType="int" resultType="User">
-		select * from users where id=#{id}
+		select id,username,email,createtime,lastchange,admin from users where id=#{id}
 
 	</select>
 	<delete id="delete" parameterType="Integer">
 		delete from users where id = #{id}
 	</delete>
 	<update id="update" >
-		update users set username=#{username},password=#{password},
-		email=#{email},admin=#{admin} where id=#{id}
+		update users set username=#{username},password=#{password},salt=#{salt},
+		email=#{email},admin=#{admin},lastchange=#{lastchange} where id=#{id}
 	</update>
 	<select id="list" resultType="User">
 
-		select * from users
+		select id,username,email,createtime,lastchange,admin from users
 	</select>
 
 </mapper>

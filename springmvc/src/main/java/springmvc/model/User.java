@@ -1,15 +1,32 @@
 package springmvc.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5906018559014013477L;
 	private Integer id;
 	private String username;
 	private String password;
+	private String salt;
 	private String email;
 	private Timestamp createtime;
+	private Timestamp lastchange;
 	private Integer admin;
+
+	public void setSalt(String salt) {
+		// TODO Auto-generated method stub
+		this.salt = salt;
+
+	}
+
+	public String getSalt() {
+		return salt;
+	}
 
 	public String getRole() {
 		String role = "";
@@ -84,9 +101,18 @@ public class User {
 		return createtime;
 	}
 
+	public void setLastchange(Timestamp lastchange) {
+		this.lastchange = lastchange;
+	}
+
+	public Timestamp getLastchange() {
+		return lastchange;
+	}
+
 	@Override
 	public String toString() {
 		return "{user: [id=" + id + ",username=" + username + ",password=" + password + ",email=" + email + ",admin="
-				+ admin + ",createtime=" + createtime + "]}";
+				+ admin + ",createtime=" + createtime + ",lastchange=" + lastchange + "]}";
 	}
+
 }

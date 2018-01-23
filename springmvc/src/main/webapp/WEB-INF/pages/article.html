@@ -18,8 +18,7 @@
 		
 			$(document).ready(function(){
 				login();
-					
-					
+			
 					
 			});
 		</script>
@@ -58,7 +57,8 @@
 								    <div >
 										<p th:text="${article.body}">body</p>
 										<p>
-											Created By <a th:text="${article.author}">author</a><label th:text="'  '+${article.createtime}">createtime</label>    
+											Created By <a th:text="${article.author}">author</a><br>
+											<label th:text="'  '+${article.createtime}">createtime</label>    
 										</p> 
 								    </div>
 								</td>		
