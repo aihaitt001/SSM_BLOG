@@ -12,18 +12,21 @@ public class LoginedInterceptor implements HandlerInterceptor {
 	private static final String[] IGNORE_URI = { "footer", "nav", "main", "jpg", "img", "css", "js", "index", "login",
 			"404", "error", "register", "contact" };
 
+	@Override
 	public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
 			throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3)
 			throws Exception {
 		// TODO Auto-generated method stub
 
 	}
 
+	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
 		// TODO Auto-generated method stub
 		boolean islogined = false;

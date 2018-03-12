@@ -37,7 +37,7 @@
    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" /> 
 
    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-       <!-- session的失效时长，单位毫秒 -->
+      <!-- session的失效时长，单位毫秒 -->
      <property name="globalSessionTimeout" value="600000"/>
       <!-- 删除失效的session -->
      <property name="deleteInvalidSessions" value="true"/>
@@ -56,8 +56,9 @@
   
   
   <!-- 自定义的控制并发登陆过滤器 -->
-  <bean id="kickoutSessionControlFilter" class="springmvc.shiro.kickoutSessionControlFilter">
-  
+  <bean id="kickoutControlFilter" class="springmvc.shiro.KickoutControlFilter">
+   
+   
   </bean>
   
     <!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->  
@@ -69,16 +70,9 @@
         <property name="loginUrl" value="/login"/>  
         <!-- 登录成功后要跳转的连接(本例中此属性用不到,因为登录成功后的处理逻辑在LoginController里硬编码为main.jsp了) -->  
         <!-- <property name="successUrl" value="/user"/>  --> 
-        <!-- 用户访问未对其授权的资源时,所显示的连接 -->  
-        <!-- 若想更明显的测试此属性可以修改它的值,如unauthor.jsp,然后用[玄玉]登录后访问/admin/listUser.jsp就看见浏览器会显示unauthor.jsp -->  
+        <!-- 用户访问未对其授权的资源时,所显示的连接 -->       
         <property name="unauthorizedUrl" value="/login"/>  
-        <!-- 自定义过滤器配置 -->
-        <property name="filters">
-        	<util:map>
-        		<entry key="kickout" value-ref="kickoutSessionControlFilter">
-        		</entry>
-        	</util:map>
-        </property>
+        
         <!-- Shiro连接约束配置,即过滤链的定义 -->  
         <!-- 此处可配合这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->  
         <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->  
@@ -91,10 +85,18 @@
                  /admin=authc,perms[admin:manage]
                 /admin/**=authc,perms[admin:manage]
                /artcle = authc,perms[user:manage]
-              /** = kickout
+               /normaluser = user,perms[user:manage]
+             /** = kickout
    
             </value>  
         </property>  
+        <!-- 自定义过滤器配置 -->
+        <property name="filters">
+        	<util:map>
+        		<entry key="kickout" value-ref="kickoutControlFilter">
+        		</entry>
+        	</util:map>
+        </property>
     </bean>  
   
     <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
@@ -104,12 +106,12 @@
     <!-- 配置以下两个bean即可实现此功能 -->  
     <!-- Enable Shiro Annotations for Spring-configured beans. Only run after the lifecycleBeanProcessor has run -->  
     <!-- 由于本例中并未使用Shiro注解,故注释掉这两个bean(个人觉得将权限通过注解的方式硬编码在程序中,查看起来不是很方便,没必要使用) -->  
-    <!--   
-    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
+    
+   <!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
         <property name="securityManager" ref="securityManager"/>  
-    </bean>  
-     -->  
+    </bean>   --> 
+      
 	
 	<!-- 引入属性文件 -->   
     <context:property-placeholder location="classpath:mail.properties" ignore-unresolvable="true"/>  
@@ -133,44 +135,40 @@
     </bean>  
             
 
-
 	<!-- 引入属性文件 -->   
     <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>  
  <!-- redis config start -->
-    <!-- 配置JedisPoolConfig实例 -->
-    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
-        <property name="maxIdle" value="${redis.maxIdle}" />
-        <property name="maxTotal" value="${redis.maxActive}" />
-        <property name="maxWaitMillis" value="${redis.maxWait}" />
-        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
-    </bean>
-
-    <!-- 配置JedisConnectionFactory -->
-    <bean id="jedisConnectionFactory"
-        class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
-        <property name="hostName" value="${redis.host}" />
-        <property name="port" value="${redis.port}" />
-         <property name="password" value="${redis.pass}" /> 
-        <property name="database" value="${redis.dbIndex}" />
-        <property name="poolConfig" ref="poolConfig" />
-    </bean>
-
-    <!-- 配置RedisTemplate -->
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
-        <property name="connectionFactory" ref="jedisConnectionFactory" />
-    </bean>
-
-    <!-- 配置RedisCacheManager -->
-    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
-        <constructor-arg name="redisOperations" ref="redisTemplate" />
-        <property name="defaultExpiration" value="${redis.expiration}" />
-    </bean>
-
-    <!-- 配置RedisCacheConfig -->
-    <bean id="redisCacheConfig" class="com.ssm.utils.RedisCacheConfig">
-        <constructor-arg ref="jedisConnectionFactory" />
-        <constructor-arg ref="redisTemplate" />
-        <constructor-arg ref="redisCacheManager" />
+    <!-- 连接池配置 -->  
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <!-- 最大连接数 -->  
+        <property name="maxTotal" value="30" />  
+        <!-- 最大空闲连接数 -->  
+        <property name="maxIdle" value="10" />  
+        <!-- 每次释放连接的最大数目 -->  
+        <property name="numTestsPerEvictionRun" value="10" />  
+        <!-- 释放连接的扫描间隔（毫秒） -->  
+        <property name="timeBetweenEvictionRunsMillis" value="30000" />  
+        <!-- 连接最小空闲时间 -->  
+        <property name="minEvictableIdleTimeMillis" value="1800000" />  
+        <!-- 连接空闲多久后释放, 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放 -->  
+        <property name="softMinEvictableIdleTimeMillis" value="10000" />  
+        <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->  
+        <property name="maxWaitMillis" value="1500" />  
+        <!-- 在获取连接的时候检查有效性, 默认false -->  
+        <property name="testOnBorrow" value="true" />  
+        <!-- 在空闲时检查有效性, 默认false -->  
+        <property name="testWhileIdle" value="true" />  
+        <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->  
+        <property name="blockWhenExhausted" value="false" />  
+    </bean>     
+      
+   <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+        <constructor-arg name="host" value="${redis.host}" />
+        <constructor-arg name="port" value="${redis.port}" type="int" />
+        <constructor-arg name="timeout" value="${redis.timeout}" type="int" />
+        <constructor-arg name="password" value="#{'${redis.password}'!=''?'${redis.password}':null}" />
+        <constructor-arg name="database" value="${redis.db.index}" type="int" />
     </bean>
     <!-- redis config end -->
 
@@ -222,6 +220,21 @@
 		<property name="typeAliasesPackage" value="springmvc.model" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="mapperLocations" value="classpath:springmvc/mapper/*.xml" />
+		  <!-- 注意其他配置 -->
+  <property name="plugins">
+    <array>
+      <bean class="com.github.pagehelper.PageInterceptor">
+        <property name="properties">
+          <!--使用下面的方式配置参数，一行配置一个 -->
+          <value>
+            params=value1
+            helperDialect=mysql
+            reasonable=true
+          </value>
+        </property>
+      </bean>
+    </array>
+  </property> 
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

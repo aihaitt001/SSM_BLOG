@@ -12,7 +12,8 @@
           
 <!--         文件会打印出所有信息，这个log每次运行程序会自动清空，由append属性决定 -->  
 <!--         append为TRUE表示消息增加到指定文件中，false表示消息覆盖指定的文件内容，默认值是true -->  
-        <File name="log" fileName="${web:rootDir}/springmvc_log/test.log" append="false">  
+<!-- 开发测试用 -->
+        <File name="testlog" fileName="${web:rootDir}/springmvc_log/test.log" append="false">  
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>  
         </File>  
           
@@ -37,7 +38,7 @@
             <appender-ref ref="RollingFile"/>  
             <appender-ref ref="Console"/>  
             <appender-ref ref="ERROR" />  
-            <appender-ref ref="log"/>  
+            <appender-ref ref="testlog"/>  
         </root>  
   
     </loggers>  

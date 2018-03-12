@@ -21,4 +21,6 @@ public interface UsersMapper {
 
 	public void update(User user);
 
+	public void flushUsers();
+
 }

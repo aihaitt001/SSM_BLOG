@@ -17,9 +17,6 @@
 		
 			$(document).ready(function(){
 				
-				login();
-					
-					
 			});
 			//当重新输入时 清空消息区
 			
@@ -49,9 +46,7 @@
 			<!-- 内容区 开始-->
 			<div class="row clearfix">
 				<div class="col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4">
-               
-
-	                <form action="/springmvc/login" method="POST" name="loginform" id="loginForm" >
+                   <form action="/springmvc/login" method="POST" name="loginform" id="loginForm" >
 	                	<input type="hidden" name="flag" value="2">
 	                    <div class="row control-group">
 	                        <div class="form-group col-xs-12 floating-label-form-group controls">
@@ -81,8 +76,6 @@
 			<!-- 内容区 结束 -->
 		</div>
 	</body>
-	<hr>
-	<footer  th:replace="footer.html :: copy"></footer>
-
+	
  
 </html>

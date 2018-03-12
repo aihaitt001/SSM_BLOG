@@ -1,8 +1,5 @@
 package springmvc.controller;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -31,39 +28,46 @@ public class LoginController {
 	@Autowired
 	UserService userservice;
 
+	String flagtest = "1";
+
+	/**
+	 * 
+	 * @return message:["":未登录||user{id,username,password,salt,admin}:已登录]
+	 */
 	@ResponseBody
 	@RequestMapping("/check_loginning")
-	public String check_loginning(HttpServletRequest request, HttpSession session) {
+	public String check_loginning() {
 		// logger.info("check_loginning");
 		Subject currentUser = SecurityUtils.getSubject();
 		ObjectMapper mapper = new ObjectMapper();
 		String message = "";
-		if (currentUser.getSession().getAttribute("currentUser") != null) {
-			User user = ((User) currentUser.getSession().getAttribute("currentUser"));
+		if (!currentUser.isAuthenticated() && !currentUser.isRemembered()) {
+			return message;
+		} else {
+			User user = (userservice.checkUsername((String) currentUser.getPrincipal()));
+
 			try {
 				message = mapper.writeValueAsString(user);
 			} catch (JsonProcessingException e) {
 				// TODO Auto-generated catch block
 				logger.error("user转换json失败" + e);
-				return message;
+				// return message;
 			}
 			// logger.info(message + "已登录 ");
-		} else {
-
-			// logger.info(message + "未登录 ");
 		}
 		return message;
 	}
 
 	@RequestMapping("/register")
 	public ModelAndView register(String flag, String username, String password, String email, ModelAndView mav) {
+
 		String viewname = "register.html";
 		String result = "请输入相应信息后点击“注册”按钮";
 		if (flag == null) {
 			flag = "1";
 		}
-		if (flag.equals("1")) {
-			logger.info("register  1");
+		if (flagtest.equals(flag)) {
+			// logger.info("register 1");
 			result = "";
 		} else {
 			if (null != username || username != "" || password != "" || null != password) {
@@ -74,7 +78,7 @@ public class LoginController {
 					mav.setViewName(viewname);
 					return mav;
 				} else {
-					logger.info("register  2");
+					// logger.info("register 2");
 					User user = new User();
 					user.setAdmin(2);
 					user.setEmail(email);
@@ -112,11 +116,11 @@ public class LoginController {
 			flag = "1";
 			message = "";
 		}
-		if (flag.equals("1")) {
+		if (flagtest.equals(flag)) {
 
 		} else if (flag.equals("2")) {
 			if (null != username && null != password) {
-				logger.info("输入正常");
+				// logger.info("输入正常");
 			} else {
 				logger.info("用户名或密码没有输入");
 				message = "用户名或密码没有输入";
@@ -125,8 +129,7 @@ public class LoginController {
 			}
 			UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 			token.setRememberMe(true);
-
-			logger.info("为了验证登录用户而封装的token为" + token);
+			// logger.info("为了验证登录用户而封装的token为" + token);
 			// 获取当前的Subject
 			Subject currentUser = SecurityUtils.getSubject();
 
@@ -136,7 +139,7 @@ public class LoginController {
 				// 所以这一步在调用login(token)方法时,它会走到MyRealm.doGetAuthenticationInfo()方法中,具体验证方式详见此方法
 				logger.info("对用户[" + username + "]进行登录验证..验证开始");
 				currentUser.login(token);
-				logger.info("对用户[" + username + "]进行登录验证..验证通过");
+				logger.info("对用户[" + username + "]验证通过");
 
 			} catch (UnknownAccountException uae) {
 				logger.info("对用户[" + username + "]进行登录验证..验证未通过,未知账户");
@@ -160,10 +163,10 @@ public class LoginController {
 			}
 			// 验证是否登录成功
 			if (currentUser.isAuthenticated()) {
-				logger.info("登陆成功");
-				logger.info("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
+				// logger.info("登陆成功");
+				// logger.info("用户[" + username + "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 				User user = ((User) currentUser.getSession().getAttribute("currentUser"));
-				System.out.println(user);
+
 				if (user.getAdmin() == 1) {
 					result = "redirect:/admin";
 				} else if (user.getAdmin() == 2) {
@@ -199,6 +202,14 @@ public class LoginController {
 			logger.info(result);
 		}
 		mav.setViewName("redirect:/login");
+		return mav;
+
+	}
+
+	@RequestMapping("/kickout")
+	public ModelAndView kuckout(ModelAndView mav) {
+
+		mav.setViewName("kickout.html");
 		return mav;
 
 	}

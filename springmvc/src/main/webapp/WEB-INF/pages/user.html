@@ -27,7 +27,10 @@
 				 });
 				 
 			});
-			
+			function getByPageNum(num){
+				alert(num);
+				window.location.href="/springmvc/normaluser?pageNum="+num;  
+			}
 			function addArticle(){
 				
 	 			var title = $("#new_title").val();
@@ -72,12 +75,12 @@
 			 		            url: "/springmvc/article" ,
 			 		            data: JSON.stringify(article),   
 			 		            dataType: 'text', //返回数据类型
-			 		            success: function () {
-			 		            	alert("update done");
+			 		            success: function (result) {
+			 		            	alert(result);
 			 		            	location.reload(true);
 			 		            },
-			 		            error: function (e) {
-			 		                alert("error:"+e);
+			 		            error: function (result) {
+			 		                alert(result);
 			 		            }
 			 			});
 			 		
@@ -245,7 +248,7 @@
 													</h4>
 												</div>
 												<div class="modal-body">
-													<div><p th:id="'article_id'+${article.articleId}"  th:text="${article.title}"></p></div>
+													<div><p th:id="'article_id'+${article.articleId}"  th:text="${article.articleId}"></p></div>
 													<div class="input-group ">
 														<span class="input-group-addon">title</span>
 														<input type="text" th:id="'input_title'+${article.articleId}"  th:value="${article.title}" class="form-control" placeholder="每个标签之间请以“，”隔开">
@@ -274,11 +277,19 @@
 							    </td>
 								
 						</tr>
-						
-					
-					</tbody>
+							
+					</tbody>					
 				</table>
-			
+			<div id="pageList">
+					<button id="previousButton" type="button" class="btn btn-default" th:onclick="'javascript:getByPageNum('+${pageInfo.prePage}+');'">前一页</button>
+						总页数：<label th:text="${pageInfo.pages}"></label>
+						总记录数：<label th:text="${pageInfo.total}"></label>
+						当前页：<label th:text="${pageInfo.pageNum}"></label>
+						当前页数量：<label th:text="${pageInfo.size}"></label>
+						每页最多：<label th:text="${pageInfo.pageSize}"></label>			
+					<button id="previousButton" type="button" class="btn btn-default" th:onclick="'javascript:getByPageNum('+${pageInfo.nextPage}+');'">后一页</button>
+					
+					</div>
 					
 			</div>
 			<!-- 内容区 结束 -->

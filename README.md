@@ -25,3 +25,7 @@
 12. 1. 利用shiro完成了初步的权限管理，替代了自定义的拦截器。 --2018.1.8~2018.1.17
     2. 注册功能实现ing。
 	3. 项目已经部署到阿里云，网址：www.lifeforfun.cn   --2018.1.18
+    4. 用户密码实现了MD5加密存储  --2018.1.23
+	   （1）利用java.io.SimpleHash完成对密码的MD5加密和加随机盐（见MD5Util）。
+	    （2）配置org.apache.shiro.authc.credential.HashedCredentialsMatcher，并添加到Realm中，完成shiro对解密的配置。（见applicationContext.xml）
+		  (3) 在Realm中验证用户时，加盐，完成密码的解码（见MyRealm）。

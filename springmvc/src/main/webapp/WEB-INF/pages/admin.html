@@ -4,7 +4,7 @@
 		
 	<head>
 		<meta charset="UTF-8">
-		<username>user</username> 
+		
 		<script type="text/javascript" src="/springmvc/js/json2.js"></script>
 		<script type="text/javascript" src="/springmvc/js/jquery-3.2.1.min.js"></script>
 		<script type="text/javascript" src="/springmvc/js/jqBootstrapValidation.js"></script>
@@ -20,11 +20,11 @@
 				login();
 				selectUsers();
 				 $("#addButton").click(function(){
-					 addArticle();
+					 addUser();
 					 
 				 }); 
 			});
-			function addArticle(){
+			function addUser(){
 				
 	 			var username = $("#new_username").val();
 	 			var email = $("#new_email").val();
@@ -51,7 +51,7 @@
 	 		            }
 	 			});
 			}
-			 	  function updateArticle(id){
+			 	  function updateUser(id){
 			 		
 			 			var userid = $("#user_id"+id).text();
 			 			var username = $("#input_username"+id).val();
@@ -155,7 +155,7 @@
 			
 		</script>
 	</head>
-	<admin style="padding:70px">
+	<body style="padding:70px">
 	 	<!-- header 开始-->
 		<div class="container">
 			<div class="row clearfix">				
@@ -229,13 +229,13 @@
 						<tr><td><button id="delete_button" class="btn btn-primary" data-loading-text="删除中..." type="button">删除</button></td></tr>
 						<tr>
 							
-							<th>id</th> 
+							<th></th> 
 							<th>用户名</th>					
 							<th>权限等级</th>
 							<th>操作</th>
 						</tr>
 					</thead>
-					<tadmin>
+					<tbody>
 					    
 						<tr th:each="user : ${users}">
 							
@@ -280,7 +280,7 @@
 												<div class="modal-footer">
 													<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 													</button>
-													<button id="changeButton" type="button" class="btn btn-primary" th:onclick="'javascript:updateArticle('+${user.id}+');'">
+													<button id="changeButton" type="button" class="btn btn-primary" th:onclick="'javascript:updateUser('+${user.id}+');'">
 														修改
 													</button>
 												</div>
@@ -293,14 +293,14 @@
 						</tr>
 						
 					
-					</tadmin>
+					</tbody>
 				</table>
 			
 					
 			</div>
 			<!-- 内容区 结束 -->
 		</div>
-	</admin>
+	</body>
 	<hr>
 	<footer  th:replace="footer.html :: copy"></footer>
 

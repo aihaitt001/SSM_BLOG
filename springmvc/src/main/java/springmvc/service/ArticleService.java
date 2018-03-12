@@ -16,4 +16,6 @@ public interface ArticleService {
 	public Article getByArticleId(Integer articleId);
 
 	public void update(Article article);
+
+	public List<Article> listArticleByPage(String username, int pagenum, int pagesize);
 }

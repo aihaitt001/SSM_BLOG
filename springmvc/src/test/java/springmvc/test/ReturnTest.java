@@ -9,10 +9,13 @@ public class ReturnTest {
 
 	public String returnTest() {
 		int i = 0;
-		if (i == 0)
+		if (i == 0) {
 			return null;
-		else
+		}
+
+		else {
 			return null;
+		}
 
 	}
 }

@@ -64,12 +64,17 @@ public class ArticleController {
 	@RequestMapping(method = RequestMethod.PUT)
 	public String updatearticleByarticleId(@RequestBody Article article) {
 		System.out.println("updatearticle:" + article);
+		String result = "修改成功";
+		try {
+			Date date = new Date();
+			Timestamp createtime = new Timestamp(date.getTime());
+			article.setCreatetime(createtime);
+			service.update(article);
+		} catch (Exception e) {
+			result = "修改失败" + e.toString();
+		}
 
-		Date date = new Date();
-		Timestamp createtime = new Timestamp(date.getTime());
-		article.setCreatetime(createtime);
-		service.update(article);
-		return "修改成功";
+		return result;
 	}
 
 	/*

@@ -21,9 +21,15 @@
 		select id,username,email,createtime,lastchange,admin from users where id=#{id}
 
 	</select>
+	
+	<delete id="flushUsers" >
+		delete from users where 1=1
+	</delete>
+	
 	<delete id="delete" parameterType="Integer">
 		delete from users where id = #{id}
 	</delete>
+	
 	<update id="update" >
 		update users set username=#{username},password=#{password},salt=#{salt},
 		email=#{email},admin=#{admin},lastchange=#{lastchange} where id=#{id}

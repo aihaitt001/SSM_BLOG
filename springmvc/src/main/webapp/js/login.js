@@ -19,12 +19,13 @@ function check_loginning(){
             dataType: 'text', //返回数据类型
             success: function (data) {
             	//alert("data:"+data);  
-            	var user = eval("("+data+")");
-            	if(user==""){
+            	
+            	if(data==""){
             		alert("请先登录!");
             		$("#logout").html("");
             		loginning =  "false";
             	}else{
+            		var user = eval("("+data+")");
             	//	alert("已登录");
             		var url =  " <a  href=\"/springmvc/normaluser\">"+user.username+"</a>";
             		if(user.admin==2){
