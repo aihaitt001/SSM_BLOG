@@ -16,10 +16,122 @@
 		<script type="text/javascript">
 		
 			$(document).ready(function(){
-		
-					
+				
 			});
-			//当重新输入时 清空消息区
+			
+			function register(){
+				console.log("register");
+				
+				if(checkUsername()=="true"&&checkPassword()=="true"){			
+						console.log("check done");			
+						addUser();			
+				}
+			}
+			
+	function checkUsername(){
+		var result = "false";
+				var username = $("#username").val();
+				if(username!=""&&username!=null){
+					var user = {username:username};
+					  $.ajax({
+		 				 type: "POST",
+		 				async:false,
+		 				 contentType : 'application/json;charset=utf-8',
+		 		            url: "/springmvc/register/checkUsername" ,
+		 		            data: JSON.stringify(user),   
+		 		            dataType: 'text', //返回数据类型
+		 		            success: function (message) {
+		 		            	if(message=="yes"){
+		 		            		$("#checkResult").empty();
+		 		            		$("#checkResult").prepend("<div class=\"input-group\" >用户名"+username+"可用</div>");
+		 		            		
+		 		            		console.log("用户名可用");
+		 		            		result = "true";
+		 		            		
+		 		            	}
+		 		            	else{
+		 		            		$("#checkResult").prepend("<div class=\"input-group\" >用户名"+username+"不可用</div>");
+		 		            		
+		 		            		console.log("用户名不可用");
+		 		            		result = "false";
+		 		            	}
+		 		            	
+		 		            },
+		 		            error: function (e) {
+		 		            	$("#checkResult").prepend("<div class=\"input-group\" >"+e+"</div>");
+		 		            	
+		 		            	console.log("网络错误");
+		 		            	result = "false";
+		 		            }
+		 			});
+					
+				}
+				else{
+					$("#checkResult").prepend("<div class=\"input-group\" >用户名不能为空</div>");
+				
+					console.log("用户名为空");
+					result = "false";
+				}
+				console.log("result::"+result);
+				return result;
+				
+			}
+			function checkPassword(){
+				//alert("checkpassword");
+				var password = $("#password").val();
+				var password_re = $("#password_re").val();
+				if(password!=""&&password!=null){
+				if(password==password_re){
+					$("#checkResult").empty();
+	            		$("#checkResult").prepend("<div class=\"input-group\" >密码可用</div>");
+	            		
+	            		console.log("密码可用");
+	    				
+	            		return "true";
+				}else{
+					$("#checkResult").empty();
+	            		$("#checkResult").prepend("<div class=\"input-group\" >两次密码不一致</div>");
+	            	
+	            		console.log("密码不一致");
+	    				return "false";
+				}
+				}
+				else{
+					$("#checkResult").prepend("<div class=\"input-group\" >密码不能为空</div>");
+					
+					console.log("密码为空");
+					return "false";
+				}
+				
+			}
+		
+			
+			function addUser(){
+				console.log("adduser");
+	 			var username = $("#username").val();
+	 			var email = $("#email").val();
+	 			var password = $("#password").val();
+	 			
+	 			alert(username+password+email);
+	 			var user = {username:username,email:email,password:password};
+	 			
+	 			var user_val  = JSON.stringify(user);
+	 			
+	 			$.ajax({
+	 				 type: "POST",
+	 				 contentType : 'application/json;charset=utf-8',
+	 		            url: "/springmvc/register/addUser" ,
+	 		            data: JSON.stringify(user),   
+	 		            dataType: 'text', //返回数据类型
+	 		            success: function (message) {
+	 		            	alert( message);          		
+	 		            },
+	 		            error: function (e) {
+	 		                alert("error:"+e) ;
+	 		            }
+	 			});
+			}
+			
 			
 		</script>
 	</head>
@@ -41,7 +153,7 @@
 		<div class="container">
 			<div class="row jumbotron clearfix">
 				<h1>
-					Hello, world!
+					Hello! Have Fun!
 				</h1>
 			</div>
 			<!-- 内容区 开始-->
@@ -49,30 +161,34 @@
 				<div class="col-lg-4 col-lg-offset-4 col-md-4 col-md-offset-4">
                
 
-	                <form action="/springmvc/register" method="POST" name="registerform" id="registerForm" >
-	                	<input type="hidden" name="flag" value="2">
+	               
 	                   <div class="input-group">
 							<span class="input-group-addon">邮箱</span>
 							<input type="text" name="email" id="email" class="form-control" placeholder="找回密码时使用">
 						</div><br>
-						<div class="input-group">
+						<div class="input-group" id="usernameGroup">
 							<span class="input-group-addon">用户名</span>
-							<input type="text" name="username" id="username" class="form-control" placeholder="登录名">
+							<input onchange="checkUsername()" type="text" name="username" id="username" class="form-control" placeholder="登录名">
 						</div><br>
 						<div class="input-group">
-							<span class="input-group-addon">密码</span>
-							<input type="password" name="password" id="password" class="form-control" placeholder="******">
+							<span class="input-group-addon">登陆密码</span>
+							<input type="password" name="password" id="password" class="form-control" placeholder="***">
+						</div><br>
+						<div class="input-group">
+							<span class="input-group-addon">再次输入密码</span>
+							<input onchange="checkPassword()" type="password" name="password" id="password_re" class="form-control" placeholder="***">
+						</div><br>
+						<div id="checkResult" class="input-group">
+							
 						</div><br>
 	   					<div class="row">
-	                        <div class="form-group col-xs-12">
-	                            <button type="submit" class="button">注册</button><br>
-                             <p th:text="${result}"></p>
+	   					     
+	                        <div class="form-group col-xs-4">
+	                            <button type="button" class="btn btn-default"  id="btSubmit" onclick="register()" >注册</button><br>
+                             <p th:text="${message}"></p>
 	                        </div>
 	                       
-	                    </div>
-                        
-	                </form>
-	                       
+	                    </div>                  
             	</div>
 			</div>
 			<!-- 内容区 结束 -->

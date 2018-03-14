@@ -37,7 +37,11 @@ public class UserController {
 		System.out.println("adduser");
 
 		// MD5Util.EncryptUser(user);
-		service.add(user);
+		try {
+			service.add(user);
+		} catch (Exception e) {
+			return "发生错误：" + e.toString();
+		}
 
 		return "add success";
 

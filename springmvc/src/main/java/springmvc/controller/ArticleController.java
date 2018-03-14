@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import springmvc.model.Article;
-import springmvc.model.Message;
+import springmvc.model.MyMessage;
 import springmvc.model.User;
 import springmvc.service.ArticleService;
 
@@ -48,7 +48,7 @@ public class ArticleController {
 		article.setAuthor(user.getUsername());
 		System.out.println(article);
 		service.add(article);
-		Message result = new Message();
+		MyMessage result = new MyMessage();
 		result.setCurrentuser(user.getUsername());
 		result.setResult("success！" + user.getUsername());
 		ObjectMapper map = new ObjectMapper();

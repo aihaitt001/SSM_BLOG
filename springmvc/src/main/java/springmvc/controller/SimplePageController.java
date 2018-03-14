@@ -13,6 +13,16 @@ public class SimplePageController {
 	@Autowired
 	ArticleService service;
 
+	@RequestMapping(value = "/register")
+	public ModelAndView register(ModelAndView mav) {
+
+		String viewname = "register.html";
+
+		mav.setViewName(viewname);
+		return mav;
+
+	}
+
 	@RequestMapping(value = "/footer")
 	public ModelAndView footer(ModelAndView mav) {
 		mav.setViewName("footer.html");

@@ -58,53 +58,6 @@ public class LoginController {
 		return message;
 	}
 
-	@RequestMapping("/register")
-	public ModelAndView register(String flag, String username, String password, String email, ModelAndView mav) {
-
-		String viewname = "register.html";
-		String result = "请输入相应信息后点击“注册”按钮";
-		if (flag == null) {
-			flag = "1";
-		}
-		if (flagtest.equals(flag)) {
-			// logger.info("register 1");
-			result = "";
-		} else {
-			if (null != username || username != "" || password != "" || null != password) {
-				if (null != userservice.checkUsername(username)) {
-					result = "用户名" + username + "重复";
-					// logger.error(result);
-					mav.addObject("result", result);
-					mav.setViewName(viewname);
-					return mav;
-				} else {
-					// logger.info("register 2");
-					User user = new User();
-					user.setAdmin(2);
-					user.setEmail(email);
-					user.setPassword(password);
-					user.setUsername(username);
-					logger.info("新增用户" + user.getUsername());
-					try {
-						userservice.add(user);
-						viewname = "redirect:/login";
-					} catch (Exception e) {
-						result = "注册时发生错误：" + e.toString();
-					} finally {
-						logger.error(result);
-
-					}
-
-				}
-			}
-
-		}
-		mav.addObject("result", result);
-		mav.setViewName(viewname);
-		return mav;
-
-	}
-
 	/**
 	 * 用户登录
 	 */

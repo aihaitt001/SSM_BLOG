@@ -21,7 +21,7 @@ function check_loginning(){
             	//alert("data:"+data);  
             	
             	if(data==""){
-            		alert("请先登录!");
+            	//alert("请先登录!");
             		$("#logout").html("");
             		loginning =  "false";
             	}else{
