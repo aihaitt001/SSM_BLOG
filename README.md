@@ -1,5 +1,5 @@
 # SSM_Demo  
-项目已经部署到阿里云，网址：www.lifeforfun.cn
+项目已经部署到阿里云，[进入网站](www.lifeforfun.cn "lifeforfun")
 
 1. SSM框架的搭建，并实现CRUD --11.2
 2. 增加登陆功能。--11.7
