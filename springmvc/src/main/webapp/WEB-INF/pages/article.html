@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+		
+	<head>
+		<meta charset="UTF-8">
+		<title>Article</title>
+		
+		<script type="text/javascript" src="/springmvc/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="/springmvc/js/json2.js"></script>
+		<script type="text/javascript" src="/springmvc/js/login.js"></script>
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="/springmvc/css/bootstrap.min.css" rel="stylesheet">
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="/springmvc/js/bootstrap.min.js"></script>
+	
+		<script type="text/javascript">
+		
+			$(document).ready(function(){
+				login();
+				codeToHTML();
+					
+			});
+			//把thyleaf解析不了的文章body解析为html
+			function codeToHTML(){
+				var bodytext = $(".articlebody").text();
+				$(".articlebody").html(bodytext);
+				
+			}
+			
+			//回复（文章id,评论id）
+			function reply(pid,cid){
+				console.log(pid+","+cid);
+			}
+			function comment(articleid){
+				console.log(articleid);
+			}
+		</script>
+	</head>
+	<body style="padding:70px">
+	 	<!-- header 开始-->
+		<div class="container">
+			<div class="row clearfix">				
+				<div class="col-md-12 column">
+				    <!-- 导航条 开始-->
+					<div th:replace="nav.html :: copy"></div>
+					<!-- 导航条 结束 -->	
+				</div>	 	
+			</div>
+		</div>
+		 <!-- header 结束-->
+		
+		
+		<div class="container">
+			<!-- 内容区 开始-->
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<ol class="breadcrumb">
+						<li><a href="/springmvc">首页</a></li>
+						<li><a href="/springmvc/articles">所有文章</a></li>
+						<li class="active" th:text="${article.articleId}">文章编号</li>
+					</ol>
+				</div>
+				
+			   <!-- 文章 开始 -->
+				<div class="col-md-8 column" th:id="'article_' + ${article.articleId}">
+			 
+			    	<table class="table">
+						<thead>
+							<tr>
+								<th>
+									<h2 th:text="${article.title}">title</h2>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr >
+								<td>
+								    <div >
+										<p class="articlebody" th:text="${article.body}">body</p>
+										<p>
+											 本文由<a th:text="${article.author}">author</a>   
+			                                
+											写于<span th:text="'  '+${article.createtime}">createtime</span> 
+											<button class="btn btn-link" th:onclick="'comment('+${article.articleId}+');'">评论</button>   
+										</p> 
+								    </div>
+								</td>		
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- 文章 结束 -->
+				
+				<!-- 评论区开始 -->
+				<div class="col-md-6 col-md-offset-1 column">
+					
+					<table class="table">
+						<thead>
+							<tr>
+								<th>
+									<h4>评论区</h4>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="comment : ${comments}" >
+								<td>
+								    <div th:id="'comment_' + ${comment.id}">
+								    	<h5 th:text="${comment.userid}+'说：'+${comment.body}"></h5>	
+										<span th:text="${comment.committime}"> </span>
+										<button class="btn btn-link" th:onclick="'reply('+${comment.parentid}+','+${comment.id}+');'">回复 </button>
+										<hr style="border:0; border-top:2px dashed #f5f5f5;">
+								    </div>
+								</td>	
+								
+							</tr>
+							
+						</tbody>
+					</table>
+				
+				</div>
+				
+				<!-- 评论区结束 -->
+			</div>
+			<!-- 内容区 结束 -->
+		</div>
+	</body>
+	<footer  th:replace="footer.html :: copy"></footer>
+
+ 
+</html>

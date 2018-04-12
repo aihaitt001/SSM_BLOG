@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="springmvc.mapper.MyCommentMapper">
+  <resultMap id="BaseResultMap" type="springmvc.model.MyComment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="parentid" jdbcType="INTEGER" property="parentid" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="committime" jdbcType="TIMESTAMP" property="committime" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="istop" jdbcType="VARCHAR" property="istop" />
+    <result column="upnum" jdbcType="INTEGER" property="upnum" />
+    <result column="downnum" jdbcType="INTEGER" property="downnum" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+    <result column="isreply" jdbcType="VARCHAR" property="isreply" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, parentid, body, userid, committime, isdelete, istop, upnum, downnum, ps,isreply
+  </sql>
+  
+  <select id="list" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mycomments
+   
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mycomments
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+   <select id="listByParentid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mycomments
+    where parentid = #{parentid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mycomments
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="springmvc.model.MyComment">
+    insert into mycomments (id, parentid, body, 
+      userid, committime, isdelete, 
+      istop, upnum, downnum, 
+      ps,isreply)
+    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{body,jdbcType=VARCHAR}, 
+      #{userid,jdbcType=INTEGER}, #{committime,jdbcType=TIMESTAMP}, #{isdelete,jdbcType=VARCHAR}, 
+      #{istop,jdbcType=VARCHAR}, #{upnum,jdbcType=INTEGER}, #{downnum,jdbcType=INTEGER}, 
+      #{ps,jdbcType=VARCHAR},#{isreply,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="springmvc.model.MyComment">
+    insert into mycomments
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="parentid != null">
+        parentid,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="committime != null">
+        committime,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="istop != null">
+        istop,
+      </if>
+      <if test="upnum != null">
+        upnum,
+      </if>
+      <if test="downnum != null">
+        downnum,
+      </if>
+      <if test="ps != null">
+        ps,
+      </if>
+       <if test="isreply != null">
+        isreply,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentid != null">
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="committime != null">
+        #{committime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="istop != null">
+        #{istop,jdbcType=VARCHAR},
+      </if>
+      <if test="upnum != null">
+        #{upnum,jdbcType=INTEGER},
+      </if>
+      <if test="downnum != null">
+        #{downnum,jdbcType=INTEGER},
+      </if>
+      <if test="ps != null">
+        #{ps,jdbcType=VARCHAR},
+      </if>
+      <if test="reply != null">
+        #{reply,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="springmvc.model.MyComment">
+    update mycomments
+    <set>
+      <if test="parentid != null">
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="committime != null">
+        committime = #{committime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="istop != null">
+        istop = #{istop,jdbcType=VARCHAR},
+      </if>
+      <if test="upnum != null">
+        upnum = #{upnum,jdbcType=INTEGER},
+      </if>
+      <if test="downnum != null">
+        downnum = #{downnum,jdbcType=INTEGER},
+      </if>
+      <if test="ps != null">
+        ps = #{ps,jdbcType=VARCHAR},
+      </if>
+      <if test="isreply != null">
+        isreply = #{isreply,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="springmvc.model.MyComment">
+    update mycomments
+    set parentid = #{parentid,jdbcType=INTEGER},
+      body = #{body,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=INTEGER},
+      committime = #{committime,jdbcType=TIMESTAMP},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      istop = #{istop,jdbcType=VARCHAR},
+      upnum = #{upnum,jdbcType=INTEGER},
+      downnum = #{downnum,jdbcType=INTEGER},
+      ps = #{ps,jdbcType=VARCHAR},
+      reply = #{isreply,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

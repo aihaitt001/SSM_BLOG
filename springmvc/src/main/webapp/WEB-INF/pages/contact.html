@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+		
+	<head>
+		<meta charset="UTF-8">
+		<title>Contract Me</title>
+		<script type="text/javascript" src="/springmvc/js/json2.js"></script>
+		<script type="text/javascript" src="/springmvc/js/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="/springmvc/js/jqBootstrapValidation.js"></script>
+		<script type="text/javascript" src="/springmvc/js/login.js"></script>
+		<!-- 新 Bootstrap 核心 CSS 文件 -->
+		<link href="/springmvc/css/bootstrap.min.css" rel="stylesheet">
+		<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+		<script src="/springmvc/js/bootstrap.min.js"></script>
+	
+		<script type="text/javascript">
+		
+			$(document).ready(function(){
+				login();
+				
+				 $("#contactForm input,#contactForm textarea").jqBootstrapValidation({
+				        preventSubmit: true,
+				        submitError: function($form, event, errors) {
+				            // additional error messages or events
+				        },
+				        submitSuccess: function($form, event) {
+				            event.preventDefault(); // prevent default submit behaviour
+				            // get values from FORM
+				            var name = $("input#name").val();
+				            var email = $("input#email").val();
+				            var phone = $("input#phone").val();
+				            var message = $("textarea#message").val();
+				            
+				       		var report = {name: name, phone: phone,email: email,message: message};
+				       		//alert(report+JSON.stringify(report));
+				            var firstName = name; // For Success/Failure Message
+				            // Check for white space in name for Success/Fail message
+				            if (firstName.indexOf(' ') >= 0) {
+				                firstName = name.split(' ').slice(0, -1).join(' ');
+				            }
+				            $.ajax({
+				            	 type: "POST",
+				 				 contentType : 'application/json;charset=utf-8',
+				 				 url: "/springmvc/report" ,
+				                data:JSON.stringify(report), 
+				                dataType: 'text', //返回数据类型
+				                cache: false,
+				                success: function() {
+				                    // Success message
+				                    $('#success').html("<div class='alert alert-success'>");
+				                    $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
+				                        .append("</button>");
+				                    $('#success > .alert-success')
+				                        .append("<strong>发送成功 </strong>");
+				                    $('#success > .alert-success')
+				                        .append('</div>');
+
+				                    //clear all fields
+				                    $('#contactForm').trigger("reset");
+				                },
+				                error: function() {
+				                    // Fail message
+				                    $('#success').html("<div class='alert alert-danger'>");
+				                    $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
+				                        .append("</button>");
+				                    $('#success > .alert-danger').append("<strong>" + firstName + "，十分抱歉， 出现未知问题，请稍后再试！");
+				                    $('#success > .alert-danger').append('</div>');
+				                    //clear all fields
+				                    $('#contactForm').trigger("reset");
+				                },
+				            });
+				        },
+				        filter: function() {
+				            return $(this).is(":visible");
+				        },
+				    });
+
+				    $("a[data-toggle=\"tab\"]").click(function(e) {
+				        e.preventDefault();
+				        $(this).tab("show");
+				    });
+					
+					
+					
+			});
+			//当重新输入时 清空消息区
+			$('#name').focus(function() {
+			    $('#success').html('');
+			});
+		</script>
+	</head>
+	<body style="padding:70px">
+	 	<!-- header 开始-->
+		<div class="container">
+			<div class="row clearfix">				
+				<div class="col-md-12 column">
+				    <!-- 导航条 开始-->
+					<div th:replace="nav.html :: copy"></div>
+					<!-- 导航条 结束 -->	
+				</div>	 	
+			</div>
+		</div>
+		 <!-- header 结束-->
+		
+		
+		<div class="container">
+			<!-- 内容区 开始-->
+			<div class="row clearfix">
+				<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <p>本站刚刚部署，有不足之处请多多见谅。有什么问题或建议可以在下面提出来。<br>感谢您的反馈！</p>
+
+	                <form name="sentMessage" id="contactForm" novalidate>
+	                    <div class="row control-group">
+	                        <div class="form-group col-xs-12 floating-label-form-group controls">
+	                            <label>您的名字</label>
+	                            <input type="text" class="form-control" placeholder="您的名字" id="name"
+	                                   required data-validation-required-message="我该怎么称呼您呐？">
+	                            <p class="help-block text-danger"></p>
+	                        </div>
+	                    </div>
+	                    <div class="row control-group">
+	                        <div class="form-group col-xs-12 floating-label-form-group controls">
+	                            <label>邮件地址</label>
+	                            <input type="email" class="form-control" placeholder="邮件地址" id="email"
+	                                   required data-validation-required-message="我该怎么回复您呐？">
+	                            <p class="help-block text-danger"></p>
+	                        </div>
+	                    </div>
+	                    <div class="row control-group">
+	                        <div class="form-group col-xs-12 floating-label-form-group controls">
+	                            <label>手机号</label>
+	                            <input type="tel" class="form-control" placeholder="手机号" id="phone"
+	                                   required data-validation-required-message="我该怎么联系您呐？.">
+	                            <p class="help-block text-danger"></p>
+	                        </div>
+	                    </div>
+	                    <div class="row control-group">
+	                        <div class="form-group col-xs-12 floating-label-form-group controls">
+	                            <label>想说的话</label>
+	                            <textarea rows="5" class="form-control" placeholder="想说的话" id="message"
+	                                      required data-validation-required-message="有什么对我说的？"></textarea>
+	                            <p class="help-block text-danger"></p>
+	                        </div>
+	                    </div>
+	                    <br>
+	                    <div id="success"></div>
+	                    <div class="row">
+	                        <div class="form-group col-xs-12">
+	                            <button type="submit" class="btn btn-default">发送</button>
+	                        </div>
+	                    </div>
+	                </form>
+            	</div>
+			</div>
+			<!-- 内容区 结束 -->
+		</div>
+	</body>
+	<footer  th:replace="footer.html :: copy"></footer>
+
+ 
+</html>

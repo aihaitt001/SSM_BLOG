@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	 xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+     http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+	<context:component-scan base-package="springmvc" />
+	
+	
+	
+	 <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">  
+       
+        <property name="hashAlgorithmName" value="MD5"></property> <!-- 加密算法的名称 -->  
+        <property name="hashIterations" value="1024"></property> <!-- 配置加密的次数 -->  
+        <property name="storedCredentialsHexEncoded" value="true"></property> <!-- 是否存储为16进制 -->  
+    </bean>  
+	<!-- shiro配置 -->
+	<!-- 继承自AuthorizingRealm的自定义Realm,即指定Shiro验证用户登录的类为自定义的ShiroDbRealm.java -->  
+    <bean id="myRealm" class="springmvc.shiro.MyRealm">
+    	<property name="credentialsMatcher" ref="credentialsMatcher" /><!-- 加密配置 -->
+    </bean>  
+  
+    <!-- 定义缓存管理器 --> 
+   <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" /> 
+
+   <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+      <!-- session的失效时长，单位毫秒 -->
+     <property name="globalSessionTimeout" value="600000"/>
+      <!-- 删除失效的session -->
+     <property name="deleteInvalidSessions" value="true"/>
+   </bean>
+
+    <!-- Shiro默认会使用Servlet容器的Session,可通过sessionMode属性来指定使用Shiro原生Session -->  
+    <!-- 即<property name="sessionMode" value="native"/>,详细说明见官方文档 -->  
+    <!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 -->  
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+        <property name="realm" ref="myRealm"/>
+        <!-- 使用配置的缓存管理器 --> 
+    	 <property name="cacheManager" ref="cacheManager"></property> 
+    	 <!-- 会话管理 -->
+     	<property name="sessionManager" ref="sessionManager" />
+ 	 </bean>  
+  
+  
+  <!-- 自定义的控制并发登陆过滤器 -->
+  <bean id="kickoutControlFilter" class="springmvc.shiro.KickoutControlFilter">
+   
+   
+  </bean>
+  
+    <!-- Shiro主过滤器本身功能十分强大,其强大之处就在于它支持任何基于URL路径表达式的、自定义的过滤器的执行 -->  
+    <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->  
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">  
+        <!-- Shiro的核心安全接口,这个属性是必须的 -->  
+        <property name="securityManager" ref="securityManager"/>  
+        <!-- 要求登录时的链接(可根据项目的URL进行替换),非必须的属性,默认会自动寻找Web工程根目录下的"/login.jsp"页面 -->  
+        <property name="loginUrl" value="/login"/>  
+        <!-- 登录成功后要跳转的连接(本例中此属性用不到,因为登录成功后的处理逻辑在LoginController里硬编码为main.jsp了) -->  
+        <!-- <property name="successUrl" value="/user"/>  --> 
+        <!-- 用户访问未对其授权的资源时,所显示的连接 -->       
+        <property name="unauthorizedUrl" value="/login"/>  
+        
+        <!-- Shiro连接约束配置,即过滤链的定义 -->  
+        <!-- 此处可配合这篇文章来理解各个过滤连的作用http://blog.csdn.net/jadyer/article/details/12172839 -->  
+        <!-- 下面value值的第一个'/'代表的路径是相对于HttpServletRequest.getContextPath()的值来的 -->  
+        <!-- anon：它对应的过滤器里面是空的,什么都没做,这里.do和.jsp后面的*表示参数,比方说login.jsp?main这种 -->  
+        <!-- authc：该过滤器下的页面必须验证后才能访问,它是Shiro内置的一个拦截器org.apache.shiro.web.filter.authc.FormAuthenticationFilter -->  
+        <property name="filterChainDefinitions">  
+            <value>  
+                /login=anon  
+                /logout=authc                
+                 /admin=authc,perms[admin:manage]
+                /admin/**=authc,perms[admin:manage]
+               /artcle = authc,perms[user:manage]
+               /normaluser = user,perms[user:manage]
+             /** = kickout
+   
+            </value>  
+        </property>  
+        <!-- 自定义过滤器配置 -->
+        <property name="filters">
+        	<util:map>
+        		<entry key="kickout" value-ref="kickoutControlFilter">
+        		</entry>
+        	</util:map>
+        </property>
+    </bean>  
+  
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->  
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>  
+  
+    <!-- 开启Shiro的注解(如@RequiresRoles,@RequiresPermissions),需借助SpringAOP扫描使用Shiro注解的类,并在必要时进行安全逻辑验证 -->  
+    <!-- 配置以下两个bean即可实现此功能 -->  
+    <!-- Enable Shiro Annotations for Spring-configured beans. Only run after the lifecycleBeanProcessor has run -->  
+    <!-- 由于本例中并未使用Shiro注解,故注释掉这两个bean(个人觉得将权限通过注解的方式硬编码在程序中,查看起来不是很方便,没必要使用) -->  
+    
+   <!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor"/>  
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
+        <property name="securityManager" ref="securityManager"/>  
+    </bean>   --> 
+      
+	
+	<!-- 引入属性文件 -->   
+    <context:property-placeholder location="classpath:mail.properties" ignore-unresolvable="true"/>  
+    
+     <!-- 邮件发送器 qq  -->  
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">  
+        <property name="host" value="${mail.host}" />  
+        <property name="username" value="${mail.username}" />  
+        <property name="password" value="${mail.smtp.password}" />  
+        <property name="defaultEncoding" value="UTF-8"></property>  
+        <property name="javaMailProperties">  
+            <props>  
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>  
+                <prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>  
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.socketFactory.port">${mail.smtp.port}</prop>
+                <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+                <prop key="mail.smtp.socketFactory.fallback">false</prop>
+            </props>  
+        </property>  
+    </bean>  
+            
+
+	<!-- 引入属性文件 -->   
+    <context:property-placeholder location="classpath:redis.properties" ignore-unresolvable="true"/>  
+ <!-- redis config start -->
+    <!-- 连接池配置 -->  
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">  
+        <!-- 最大连接数 -->  
+        <property name="maxTotal" value="30" />  
+        <!-- 最大空闲连接数 -->  
+        <property name="maxIdle" value="10" />  
+        <!-- 每次释放连接的最大数目 -->  
+        <property name="numTestsPerEvictionRun" value="10" />  
+        <!-- 释放连接的扫描间隔（毫秒） -->  
+        <property name="timeBetweenEvictionRunsMillis" value="30000" />  
+        <!-- 连接最小空闲时间 -->  
+        <property name="minEvictableIdleTimeMillis" value="1800000" />  
+        <!-- 连接空闲多久后释放, 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放 -->  
+        <property name="softMinEvictableIdleTimeMillis" value="10000" />  
+        <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->  
+        <property name="maxWaitMillis" value="1500" />  
+        <!-- 在获取连接的时候检查有效性, 默认false -->  
+        <property name="testOnBorrow" value="true" />  
+        <!-- 在空闲时检查有效性, 默认false -->  
+        <property name="testWhileIdle" value="true" />  
+        <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->  
+        <property name="blockWhenExhausted" value="false" />  
+    </bean>     
+      
+   <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig" />
+        <constructor-arg name="host" value="${redis.host}" />
+        <constructor-arg name="port" value="${redis.port}" type="int" />
+        <constructor-arg name="timeout" value="${redis.timeout}" type="int" />
+        <constructor-arg name="password" value="#{'${redis.password}'!=''?'${redis.password}':null}" />
+        <constructor-arg name="database" value="${redis.db.index}" type="int" />
+    </bean>
+    <!-- redis config end -->
+
+<context:property-placeholder location="classpath:dataBase.properties" ignore-unresolvable="true"/>
+
+
+
+  <!-- 一、使用druid数据库连接池注册数据源 -->
+  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+     <!-- 基础配置 -->
+     <property name="url" value="${mysql.jdbc.url}"></property>
+     <property name="driverClassName" value="${mysql.jdbc.driverClassName}"></property>
+     <property name="username" value="${mysql.jdbc.username}"></property>
+     <property name="password" value="${password}"></property>
+     <property name="filters" value="config" />
+     <property name="connectionProperties" value="config.decrypt=true;config.decrypt.key=${publicKey}" />
+
+     <!-- 关键配置 -->
+     <!-- 初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时 --> 
+     <property name="initialSize" value="3" /> 
+     <!-- 最小连接池数量 --> 
+     <property name="minIdle" value="2" /> 
+     <!-- 最大连接池数量 --> 
+     <property name="maxActive" value="15" />
+     <!-- 配置获取连接等待超时的时间 --> 
+     <property name="maxWait" value="10000" />
+
+     <!-- 性能配置 -->
+     <!-- 打开PSCache，并且指定每个连接上PSCache的大小 --> 
+     <property name="poolPreparedStatements" value="true" /> 
+     <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+     <!-- 其他配置 -->
+     <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 --> 
+     <property name="timeBetweenEvictionRunsMillis" value="60000" />
+     <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 --> 
+     <property name="minEvictableIdleTimeMillis" value="300000" />
+     <!--   建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，
+               执行validationQuery检测连接是否有效。 -->
+     <property name="testWhileIdle" value="true" />
+     <!-- 这里建议配置为TRUE，防止取到的连接不可用 ,申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。--> 
+     <property name="testOnBorrow" value="true" /> 
+     <!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+     <property name="testOnReturn" value="false" />
+     </bean>
+    
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="typeAliasesPackage" value="springmvc.model" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations" value="classpath:springmvc/mapper/*.xml" />
+		  <!-- 注意其他配置 -->
+  <property name="plugins">
+    <array>
+      <bean class="com.github.pagehelper.PageInterceptor">
+        <property name="properties">
+          <!--使用下面的方式配置参数，一行配置一个 -->
+          <value>
+            params=value1
+            helperDialect=mysql
+            reasonable=true
+          </value>
+        </property>
+      </bean>
+    </array>
+  </property> 
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="springmvc.mapper" />
+	</bean>
+
+</beans>
