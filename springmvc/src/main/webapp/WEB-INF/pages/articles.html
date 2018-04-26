@@ -17,9 +17,19 @@
 	$(document).ready(function(){
 		
 		login();
-			
+			codeToHTML();
 			
 	});
+	//把thyleaf解析不了的文章body解析为html
+	function codeToHTML(){
+		var list = $(".articlebody");
+		//$(".articlebody").html(bodytext); 
+		 for(var i=0;i<list.length;i++){
+		    console.log(list[i].innerText);
+			list[i].innerHTML = list[i].innerText;
+		}
+		
+	}
 	
 	</script>
 </head>
@@ -65,7 +75,7 @@
 							<td>
 							    <div th:id="'article_' + ${article.articleId}">
 							    	<h4 th:text="${article.title}"></h4>
-									<p th:text="${article.body}"></p>
+									<p class="articlebody" th:text="${article.body}"></p>
 									<p>
 										<a class="btn" th:href="'/springmvc/articles/'+${article.articleId}">详情</a> 
 									</p> 
